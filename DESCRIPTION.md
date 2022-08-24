@@ -1,4 +1,4 @@
-My App
-======
+Deskpro News
+===
 
-todo: add a description that will appear alongside your app in Deskpro admin
+Read Deskpro news

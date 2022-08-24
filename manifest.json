@@ -1,27 +1,20 @@
 {
-  "name": "@deskpro-apps/my_app",
-  "title": "My App",
-  "description": "My Deskpro app",
+  "name": "@deskpro-apps/deskpro-news",
+  "title": "Deskpro News",
+  "description": "View Deskpro news",
   "version": "1.0.0",
   "scope": "agent",
   "isSingleInstall": false,
+  "hasDevMode": true,
   "targets": [{
-    "target": "ticket_sidebar",
+    "target": "global",
     "entrypoint": "index.html"
   }],
-  "settings": {
-    "example": {
-      "title": "Example Setting",
-      "description": "Example backend only setting",
-      "type": "string",
-      "isRequired": false,
-      "isBackendOnly": true
-    }
-  },
+  "settings": {},
   "proxy": {
     "whitelist": [{
-      "url": "https://example.com/.*",
-      "methods": ["GET", "POST", "PUT"],
+      "url": "https://support.deskpro.com/.*",
+      "methods": ["GET"],
       "timeout": 10
     }]
   }

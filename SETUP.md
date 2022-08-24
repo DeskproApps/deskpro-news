@@ -1,4 +1,4 @@
-My App Setup Instructions
+Deskpro News Setup Instructions
 ===
 
-TODO: Write setup instructions
+No setup necessary, just install the app :-)
