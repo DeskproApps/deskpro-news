@@ -1,4 +1,5 @@
 import {
+    Context,
     HorizontalDivider,
     LoadingSpinner,
     useDeskproAppClient,
@@ -9,7 +10,8 @@ import { useState } from "react";
 import { fetchAdminFeed, fetchAgentFeed } from "../api";
 import { FeedItem } from "../types";
 import { orderBy } from "lodash";
-import {NewsFeedItem} from "../components/FeedItem/NewsFeedItem";
+import { NewsFeedItem } from "../components/FeedItem/NewsFeedItem";
+import {buildParentFeedPayload, parseContent} from "../utils";
 
 const WEBSITE_NEWS_URL = "https://support.deskpro.com/en/news/product";
 
@@ -30,44 +32,71 @@ export const Main = () => {
         });
     });
 
+    const getFeed = async (context: Context) => {
+        if (!(context && client)) {
+            return;
+        }
+
+        setLocale(context.data.currentAgent.locale);
+
+        if (items.length) {
+            setIsLoading(false);
+            return;
+        }
+
+        const feeds = [
+            fetchAgentFeed(),
+        ];
+
+        if (context.data.currentAgent.isAdmin) {
+            feeds.push(fetchAdminFeed());
+        }
+
+        let feedItems = (await Promise.all(feeds)).reduce<FeedItem[]>((combined, feed) => {
+            if (feed === null) {
+                return combined;
+            }
+
+            (feed?.items ?? [])
+                .forEach((item) => combined.push({
+                    ...item,
+                    description: parseContent(item.description),
+                }))
+            ;
+
+            return combined;
+        }, []);
+
+        if (context.data.env.releaseBuildTime > 0) {
+            const releaseDate = new Date(context.data.env.releaseBuildTime);
+            releaseDate.setHours(0, 0, 0, 0);
+
+            feedItems = feedItems.filter((item) => {
+                const pubDate = new Date(item.published);
+                pubDate.setHours(0, 0, 0, 0);
+
+                return pubDate.getTime() <= releaseDate.getTime();
+            });
+        }
+
+        feedItems = orderBy(feedItems, ["created"], ["desc"]);
+
+        setItems(feedItems);
+        setIsLoading(false);
+
+        return feedItems;
+    };
+
     useDeskproAppEvents({
-        onShow: (context) => {
-            if (!(context && client)) {
-                return;
-            }
-
-            setLocale(context.data.currentAgent.locale);
-
-            if (items.length) {
-                setIsLoading(false);
-                return;
-            }
-
-            const feeds = [
-                fetchAgentFeed(),
-            ];
-
-            if (context.data.currentAgent.isAdmin) {
-                feeds.push(fetchAdminFeed());
-            }
-
-            (async () => {
-                const data = (await Promise.all(feeds)).reduce<FeedItem[]>((combined, feed) => {
-                    if (feed === null) {
-                        return combined;
-                    }
-
-                    (feed?.items ?? [])
-                        .forEach((item) => combined.push(item))
-                    ;
-
-                    return combined;
-                }, []);
-
-                setItems(orderBy(data, ["created"], ["desc"]));
-                setIsLoading(false);
-            })();
+        onReady: (context) => {
+            getFeed(context).then((items) => {
+                if (items && items.length) {
+                    const payload = buildParentFeedPayload(context.data.app.name, items);
+                    parent.postMessage(payload, "*");
+                }
+            });
         },
+        onShow: getFeed,
     }, [client]);
 
     if (isLoading) {

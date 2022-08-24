@@ -14,3 +14,10 @@ export type FeedItem = {
     published: number;
     created: number;
 };
+
+export type ParentFeedPayload = {
+    eventId: "deskpro-apps.message";
+    appName: string;
+    appEventId: "newsData";
+    news: FeedItem[];
+};

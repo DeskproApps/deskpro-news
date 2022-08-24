@@ -1,6 +1,5 @@
 import { FeedItem } from "../../types";
 import { HorizontalDivider, useDeskproAppTheme } from "@deskpro/app-sdk";
-import { parseRelativeImageUrls } from "../../utils";
 import "./NewsFeedItem.css";
 
 type NewsFeedItemProps = {
@@ -11,7 +10,7 @@ type NewsFeedItemProps = {
 export const NewsFeedItem = ({ item, locale }: NewsFeedItemProps) => {
     const { theme } = useDeskproAppTheme();
 
-    const created = new Date(item.created);
+    const published = new Date(item.published);
 
     const dateFormat: Intl.DateTimeFormatOptions = {
         year: "numeric",
@@ -24,10 +23,10 @@ export const NewsFeedItem = ({ item, locale }: NewsFeedItemProps) => {
             <h2 className="news-feed-item-title" style={{ color: theme.colors.grey100 }}>
                 {item.title}
             </h2>
-            <time className="news-feed-item-date" style={{ color: theme.colors.grey80 }} dateTime={created.toISOString()}>
-                {created.toLocaleDateString(locale, dateFormat)}
+            <time className="news-feed-item-date" style={{ color: theme.colors.grey80 }} dateTime={published.toISOString()}>
+                {published.toLocaleDateString(locale, dateFormat)}
             </time>
-            <div className="news-feed-item-body" dangerouslySetInnerHTML={{ __html: parseRelativeImageUrls(item.description) }} />
+            <div className="news-feed-item-body" dangerouslySetInnerHTML={{ __html: item.description }} />
             <HorizontalDivider />
         </div>
     );
