@@ -71,7 +71,7 @@ export const Main = () => {
     }, [client]);
 
     if (isLoading) {
-        return <LoadingSpinner />
+        return <LoadingSpinner />;
     }
 
     if (!items.length) {
