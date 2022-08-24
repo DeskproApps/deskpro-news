@@ -1,7 +1,7 @@
-My App
+Deskpro News
 ===
 
-TODO: Include a summary of app functionality and a screenshot
+Global app for showing Deskpro news
 
 Basic Usage
 ---
