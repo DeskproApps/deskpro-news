@@ -2,7 +2,7 @@
   "name": "@deskpro-apps/deskpro-news",
   "title": "Deskpro News",
   "description": "View Deskpro news",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scope": "agent",
   "isSingleInstall": false,
   "hasDevMode": true,

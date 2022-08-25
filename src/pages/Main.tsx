@@ -68,12 +68,12 @@ export const Main = () => {
         }, []);
 
         if (context.data.env.releaseBuildTime > 0) {
-            const releaseDate = new Date(context.data.env.releaseBuildTime);
-            releaseDate.setHours(0, 0, 0, 0);
+            const releaseDate = new Date(context.data.env.releaseBuildTime * 1000);
+            releaseDate.setHours(24, 0, 0);
 
             feedItems = feedItems.filter((item) => {
                 const pubDate = new Date(item.published);
-                pubDate.setHours(0, 0, 0, 0);
+                pubDate.setHours(24, 0, 0);
 
                 return pubDate.getTime() <= releaseDate.getTime();
             });
