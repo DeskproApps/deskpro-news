@@ -21,7 +21,7 @@ export const NewsFeedItem = ({ item, locale }: NewsFeedItemProps) => {
     return (
         <div className="news-feed-item">
             <h2 className="news-feed-item-title" style={{ color: theme.colors.grey100 }}>
-                {item.title}
+                <a href={item.link} target="_blank" style={{ color: theme.colors.grey100 }}>{item.title}</a>
             </h2>
             <time className="news-feed-item-date" style={{ color: theme.colors.grey80 }} dateTime={published.toISOString()}>
                 {published.toLocaleDateString(locale, dateFormat)}

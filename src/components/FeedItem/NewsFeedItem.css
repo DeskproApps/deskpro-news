@@ -9,6 +9,10 @@
     font-weight: 600;
 }
 
+.news-feed-item .news-feed-item-title a {
+    text-decoration: none;
+}
+
 .news-feed-item .news-feed-item-date {
     font-size: 11px;
     font-family: "Inter", sans-serif;
