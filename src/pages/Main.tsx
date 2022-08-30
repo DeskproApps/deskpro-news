@@ -11,7 +11,8 @@ import { fetchAdminFeed, fetchAgentFeed } from "../api";
 import { FeedItem } from "../types";
 import { orderBy } from "lodash";
 import { NewsFeedItem } from "../components/FeedItem/NewsFeedItem";
-import {buildParentFeedPayload, parseContent} from "../utils";
+import { buildParentFeedPayload, parseContent } from "../utils";
+import he from "he";
 
 const WEBSITE_NEWS_URL = "https://support.deskpro.com/en/news/product";
 
@@ -60,7 +61,8 @@ export const Main = () => {
             (feed?.items ?? [])
                 .forEach((item) => combined.push({
                     ...item,
-                    description: parseContent(item.description),
+                    title: he.decode(item.title),
+                    description: parseContent(he.decode(item.description)),
                 }))
             ;
 
