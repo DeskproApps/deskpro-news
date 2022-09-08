@@ -1,12 +1,11 @@
 import {
     Context,
-    HorizontalDivider,
     LoadingSpinner,
     useDeskproAppClient,
     useDeskproAppEvents, useDeskproAppTheme,
     useInitialisedDeskproAppClient
 } from "@deskpro/app-sdk";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { fetchAdminFeed, fetchAgentFeed } from "../api";
 import { FeedItem } from "../types";
 import { orderBy } from "lodash";
@@ -25,11 +24,10 @@ export const Main = () => {
     const [items, setItems] = useState<FeedItem[]>([]);
 
     useInitialisedDeskproAppClient((client) => {
-        client.setTitle("Latest News");
         client.registerElement("link_to_news", {
-            type: "cta_external_link",
             url: WEBSITE_NEWS_URL,
-            hasIcon: false
+            type: "cta_external_link",
+            hasIcon: false,
         });
     });
 
@@ -101,6 +99,44 @@ export const Main = () => {
         onShow: getFeed,
     }, [client]);
 
+    // Pre-load images
+    useEffect(() => {
+        if (!items.length) {
+            return;
+        }
+
+        const images: Promise<void>[] = [];
+
+        items.forEach((item) => {
+            for (const { groups } of item.description.matchAll(/<img.*?src="(?<url>.*?)"[^>]+>/g)) {
+                try {
+                    new URL(groups?.url ?? "");
+                } catch (e) {
+                    continue;
+                }
+
+                if (!groups?.url) {
+                    continue;
+                }
+
+                const img = new Image();
+                img.src = groups.url;
+
+                images.push(new Promise((resolve) => {
+                    img.onload = () => resolve();
+                    img.onerror = () => resolve();
+                }));
+            }
+        });
+
+        setIsLoading(true);
+
+        Promise.all(images).finally(() => {
+            setIsLoading(false);
+        });
+
+    }, [items, setIsLoading]);
+
     if (isLoading) {
         return <LoadingSpinner />;
     }
@@ -114,9 +150,8 @@ export const Main = () => {
     }
 
     return (
-        <>
-            <HorizontalDivider style={{ marginTop: "-8px", marginBottom: "10px" }} />
+        <div style={{ paddingBottom: "40px" }}>
             {items.map((item, idx) => <NewsFeedItem item={item} locale={locale} key={idx} />)}
-        </>
+        </div>
     );
 };

@@ -1,14 +1,17 @@
 {
   "name": "@deskpro-apps/deskpro-news",
-  "title": "Deskpro News",
-  "description": "View Deskpro news",
-  "version": "1.0.2",
+  "title": "Latest News",
+  "description": "Get the latest updates from Deskpro, including new features and other product news",
+  "version": "1.0.3",
   "scope": "agent",
   "isSingleInstall": false,
   "hasDevMode": true,
   "targets": [{
     "target": "global",
-    "entrypoint": "index.html"
+    "entrypoint": "index.html",
+    "options": {
+      "width": 520
+    }
   }],
   "settings": {},
   "proxy": {

@@ -19,7 +19,7 @@ export const NewsFeedItem = ({ item, locale }: NewsFeedItemProps) => {
     };
 
     return (
-        <div className="news-feed-item">
+        <div className="news-feed-item" style={{ borderColor: theme.colors.grey20 }}>
             <h2 className="news-feed-item-title" style={{ color: theme.colors.grey100 }}>
                 <a href={item.link} target="_blank" style={{ color: theme.colors.grey100 }}>{item.title}</a>
             </h2>
@@ -27,7 +27,6 @@ export const NewsFeedItem = ({ item, locale }: NewsFeedItemProps) => {
                 {published.toLocaleDateString(locale, dateFormat)}
             </time>
             <div className="news-feed-item-body" dangerouslySetInnerHTML={{ __html: item.description }} />
-            <HorizontalDivider />
         </div>
     );
 };

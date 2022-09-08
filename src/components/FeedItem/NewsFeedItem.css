@@ -1,5 +1,10 @@
 .news-feed-item {
-    padding: 0 2px 1rem;
+    padding: 12px;
+    border-bottom: 1px solid transparent;
+}
+
+.news-feed-item:last-child {
+    border-bottom: none;
 }
 
 .news-feed-item .news-feed-item-title {

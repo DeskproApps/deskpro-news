@@ -1,3 +1,7 @@
+body {
+    margin: 0;
+}
+
 .problem-message {
     padding: 6px 10px 7px;
     border-radius: 4px;
