@@ -119,10 +119,10 @@ export const Main = () => {
                     continue;
                 }
 
-                const img = new Image();
-                img.src = groups.url;
-
                 images.push(new Promise((resolve) => {
+                    const img = new Image();
+
+                    img.src = groups.url;
                     img.onload = () => resolve();
                     img.onerror = () => resolve();
                 }));
