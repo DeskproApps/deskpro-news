@@ -2,23 +2,27 @@
   "name": "@deskpro-apps/deskpro-news",
   "title": "Latest News",
   "description": "Get the latest updates from Deskpro, including new features and other product news",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "scope": "agent",
   "isSingleInstall": false,
   "hasDevMode": true,
-  "targets": [{
-    "target": "global",
-    "entrypoint": "index.html",
-    "options": {
-      "width": 520
+  "targets": [
+    {
+      "target": "global",
+      "entrypoint": "index.html",
+      "options": {
+        "width": 520
+      }
     }
-  }],
+  ],
   "settings": {},
   "proxy": {
-    "whitelist": [{
-      "url": "https://support.deskpro.com/.*",
-      "methods": ["GET"],
-      "timeout": 10
-    }]
+    "whitelist": [
+      {
+        "url": "https://support.deskpro.com/.*",
+        "methods": ["GET"],
+        "timeout": 10
+      }
+    ]
   }
 }
