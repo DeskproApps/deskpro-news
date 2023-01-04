@@ -1,6 +1,7 @@
 import { FeedItem } from "../../types";
 import { useDeskproAppTheme } from "@deskpro/app-sdk";
 import "./NewsFeedItem.css";
+import { parseContentImages } from "../../utils";
 
 type NewsFeedItemProps = {
   item: FeedItem;
@@ -44,7 +45,7 @@ export const NewsFeedItem = ({ item, locale }: NewsFeedItemProps) => {
       </time>
       <div
         className="news-feed-item-body"
-        dangerouslySetInnerHTML={{ __html: item.description }}
+        dangerouslySetInnerHTML={{ __html: parseContentImages(item.description) }}
       />
     </div>
   );

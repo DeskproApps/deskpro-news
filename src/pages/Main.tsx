@@ -22,6 +22,7 @@ export const Main = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [locale, setLocale] = useState<string>("en-US");
     const [items, setItems] = useState<FeedItem[]>([]);
+    const [isShown, setIsShown] = useState(false);
 
     useInitialisedDeskproAppClient((client) => {
         client.registerElement("link_to_news", {
@@ -95,9 +96,17 @@ export const Main = () => {
                     parent.postMessage(payload, "*");
                 }
             });
+            setIsShown(false);
         },
-        onShow: getFeed,
+        onShow: (context) => {
+            setIsShown(true);
+            getFeed(context);
+        },
     }, [client]);
+
+    if (!isShown) {
+        return null;
+    }
 
     if (isLoading) {
         return <LoadingSpinner />;
