@@ -2,10 +2,14 @@
   "name": "@deskpro-apps/deskpro-news",
   "title": "Latest News",
   "description": "Get the latest updates from Deskpro, including new features and other product news",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "scope": "agent",
   "isSingleInstall": false,
   "hasDevMode": true,
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/DeskproApps/deskpro-news"
+  },
   "targets": [
     {
       "target": "global",
