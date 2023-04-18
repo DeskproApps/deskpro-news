@@ -10,18 +10,23 @@
     "serve": "vite preview",
     "lint": "eslint --max-warnings 0 --ext ts,tsx ./src",
     "test": "cross-env NODE_OPTIONS=--max-old-space-size=1024 jest --maxWorkers=75%",
-    "test:coverage": "cross-env NODE_OPTIONS=--max-old-space-size=1024 jest --maxWorkers=75% --coverage"
+    "test:coverage": "cross-env NODE_OPTIONS=--max-old-space-size=1024 jest --maxWorkers=75% --coverage",
+    "bumpManifestVer": "node ./bin/bumpManifestVer.js"
   },
   "dependencies": {
     "@deskpro/app-sdk": "^1.1.9",
+    "@deskpro/deskpro-ui": "^6.7.0",
     "@types/he": "^1.1.2",
     "@types/lodash": "^4.14.184",
+    "flatpickr": "^4.6.13",
     "he": "^1.2.0",
     "lodash": "^4.17.21",
     "polished": "^4.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "rss-to-json": "^2.1.0"
+    "rss-to-json": "^2.1.0",
+    "simplebar": "^6.2.5",
+    "tippy.js": "^6.3.7"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.1",
@@ -40,6 +45,7 @@
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-react-hooks": "4.3.0",
     "jest": "^27.4.7",
+    "prettier": "^2.8.7",
     "rimraf": "^3.0.2",
     "rollup-plugin-copy": "3.4.0",
     "slugify": "^1.6.5",
