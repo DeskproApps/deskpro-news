@@ -33,7 +33,6 @@ export const NewsFeedItem = ({
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        console.log(i, shownItems - 1, entry.isIntersecting);
         if (entry.isIntersecting) {
           shownItems - 1 === i && setShownItems(shownItems + 5);
         }
