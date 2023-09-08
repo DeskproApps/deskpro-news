@@ -2,13 +2,24 @@ import { FeedItem } from "../../types";
 import { useDeskproAppTheme } from "@deskpro/app-sdk";
 import "./NewsFeedItem.css";
 import { parseContentImages } from "../../utils";
+import { RefObject, useEffect, useRef } from "react";
 
 type NewsFeedItemProps = {
   item: FeedItem;
   locale: string;
+  shownItems: number;
+  setShownItems: (shownItems: number) => void;
+  i: number;
 };
 
-export const NewsFeedItem = ({ item, locale }: NewsFeedItemProps) => {
+export const NewsFeedItem = ({
+  item,
+  locale,
+  shownItems,
+  setShownItems,
+  i,
+}: NewsFeedItemProps) => {
+  const ref: RefObject<HTMLDivElement | undefined> = useRef();
   const { theme } = useDeskproAppTheme();
 
   const published = new Date(item.published);
@@ -19,8 +30,32 @@ export const NewsFeedItem = ({ item, locale }: NewsFeedItemProps) => {
     day: "numeric",
   };
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          shownItems - 1 === i && setShownItems(shownItems + 5);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.5,
+      }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [i, setShownItems, shownItems]);
+
   return (
     <div
+      ref={ref as RefObject<HTMLDivElement>}
       className="news-feed-item"
       style={{ borderColor: theme.colors.grey20 }}
     >
@@ -45,7 +80,9 @@ export const NewsFeedItem = ({ item, locale }: NewsFeedItemProps) => {
       </time>
       <div
         className="news-feed-item-body"
-        dangerouslySetInnerHTML={{ __html: parseContentImages(item.description) }}
+        dangerouslySetInnerHTML={{
+          __html: parseContentImages(item.description),
+        }}
       />
     </div>
   );
