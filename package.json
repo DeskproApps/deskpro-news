@@ -29,6 +29,7 @@
     "tippy.js": "^6.3.7"
   },
   "devDependencies": {
+    "@babel/traverse": "^7.23.9",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@types/jest": "^27.4.0",
