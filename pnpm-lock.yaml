@@ -48,8 +48,8 @@ dependencies:
     specifier: ^17.0.2
     version: 17.0.2(react@17.0.2)
   rss-to-json:
-    specifier: ^2.1.0
-    version: 2.1.0
+    specifier: ^2.1.1
+    version: 2.1.1
   simplebar:
     specifier: ^6.2.5
     version: 6.2.5
@@ -1702,19 +1702,20 @@ packages:
     hasBin: true
     dev: true
 
-  /axios@0.27.2:
-    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
-    dependencies:
-      follow-redirects: 1.15.1
-      form-data: 4.0.0
-    transitivePeerDependencies:
-      - debug
-    dev: false
-
   /axios@0.28.0:
     resolution: {integrity: sha512-Tu7NYoGY4Yoc7I+Npf9HhUMtEEpV7ZiLH9yndTCoNhcpBH0kwcvFbzYN9/u5QKI5A6uefjsNNWaz5olJVYS62Q==}
     dependencies:
       follow-redirects: 1.15.1
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
+  /axios@1.6.7:
+    resolution: {integrity: sha512-/hDJGff6/c7u0hDkvkGxR/oy6CbCs8ziCsC7SqmhjfozqiJGc8Z11wrv9z9lYfY4K8l+H9TpjcMDX0xOZmx+RA==}
+    dependencies:
+      follow-redirects: 1.15.5
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -2597,8 +2598,8 @@ packages:
     resolution: {integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==}
     dev: true
 
-  /fast-xml-parser@4.0.9:
-    resolution: {integrity: sha512-4G8EzDg2Nb1Qurs3f7BpFV4+jpMVsdgLVuG1Uv8O2OHJfVCg7gcA53obuKbmVqzd4Y7YXVBK05oJG7hzGIdyzg==}
+  /fast-xml-parser@4.3.4:
+    resolution: {integrity: sha512-utnwm92SyozgA3hhH2I8qldf2lBqm6qHOICawRNRFu1qMe3+oqr+GcXjGqTmXTMGE5T4eC03kr/rlh5C1IRdZA==}
     hasBin: true
     dependencies:
       strnum: 1.0.5
@@ -2656,6 +2657,16 @@ packages:
 
   /follow-redirects@1.15.1:
     resolution: {integrity: sha512-yLAMQs+k0b2m7cVxpS1VKJVvoz7SS9Td1zss3XRwXj+ZDH00RJgnuLx7E44wx02kQLrdM3aOOy+FpzS7+8OizA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dev: false
+
+  /follow-redirects@1.15.5:
+    resolution: {integrity: sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -4239,11 +4250,11 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /rss-to-json@2.1.0:
-    resolution: {integrity: sha512-F8QtOXKAX3zXW5c4+Q6Oz0PkrZgdLVXcvmdW+8+cgba9iy7qYGN7j8p28oxc1G5+WAAliEkIbjBpXWH7IfeziQ==}
+  /rss-to-json@2.1.1:
+    resolution: {integrity: sha512-xXf93iDpOadPWMtAUA/bT1iyifscdbIdtAQBGRbXLfnDQ5Z4tWpmbrAhV3p54nWxwm4joGIDeUrj6CLGm8BI3A==}
     dependencies:
-      axios: 0.27.2
-      fast-xml-parser: 4.0.9
+      axios: 1.6.7
+      fast-xml-parser: 4.3.4
     transitivePeerDependencies:
       - debug
     dev: false
