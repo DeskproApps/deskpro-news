@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@deskpro/app-sdk':
-    specifier: ^2.1.14
-    version: 2.1.14(@deskpro/deskpro-ui@7.18.3)(@types/react-dom@17.0.11)(@types/react@17.0.37)(react-dom@17.0.2)(react-is@18.2.0)(react@17.0.2)(typescript@4.5.4)
+    specifier: 2.1.12
+    version: 2.1.12(@deskpro/deskpro-ui@7.18.3)(@types/react-dom@17.0.11)(@types/react@17.0.37)(react-dom@17.0.2)(react-is@18.2.0)(react@17.0.2)(typescript@4.5.4)
   '@deskpro/deskpro-ui':
     specifier: ^7.18.3
     version: 7.18.3(@types/web@0.0.139)(react-dom@17.0.2)(react@17.0.2)(styled-components@5.3.5)
@@ -29,6 +29,9 @@ dependencies:
   he:
     specifier: ^1.2.0
     version: 1.2.0
+  iframe-resizer:
+    specifier: ^4.3.11
+    version: 4.3.11
   json5:
     specifier: 2.2.2
     version: 2.2.2
@@ -563,8 +566,8 @@ packages:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
 
-  /@deskpro/app-sdk@2.1.14(@deskpro/deskpro-ui@7.18.3)(@types/react-dom@17.0.11)(@types/react@17.0.37)(react-dom@17.0.2)(react-is@18.2.0)(react@17.0.2)(typescript@4.5.4):
-    resolution: {integrity: sha512-qplw2dYQMLEbMducAKfowt/tgdDWwYL4pJEZvuMnwWal3EoeFCkqXYbPt/PSdakESw7s0OTlB66ugeTkQvoYoQ==}
+  /@deskpro/app-sdk@2.1.12(@deskpro/deskpro-ui@7.18.3)(@types/react-dom@17.0.11)(@types/react@17.0.37)(react-dom@17.0.2)(react-is@18.2.0)(react@17.0.2)(typescript@4.5.4):
+    resolution: {integrity: sha512-A7yN7tXCs+rT1stAnd/WE+8hVj4EkneX1zXNaKxkLuakWhBGlLD4dGz+ljobUuWkGeW+Ip2uGvplBSIWVmwBsw==}
     engines: {node: ^16.0.0}
     peerDependencies:
       '@deskpro/deskpro-ui': ^7
@@ -2798,6 +2801,11 @@ packages:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
     dev: true
+
+  /iframe-resizer@4.3.11:
+    resolution: {integrity: sha512-5QtnsmfH11GDsuC7Gxd/eNzojudX3346Gb0E+Ku8ln8AtfSq+cWCZtnhCrthrtE7f1CI2/kwHkZ9G4sFYzHP7A==}
+    engines: {node: '>=0.8.0'}
+    dev: false
 
   /ignore@5.2.0:
     resolution: {integrity: sha512-CmxgYGiEPCLhfLnpPp1MoRmifwEIOgjcHXxOBjv7mY96c+eWScsOP9c112ZyLdWHi0FxHjI+4uVhKYp/gcdRmQ==}
