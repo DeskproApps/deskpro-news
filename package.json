@@ -14,7 +14,7 @@
     "bumpManifestVer": "node ./bin/bumpManifestVer.js"
   },
   "dependencies": {
-    "@deskpro/app-sdk": "2.1.12",
+    "@deskpro/app-sdk": "2.1.14",
     "@deskpro/deskpro-ui": "^7.18.3",
     "@types/he": "^1.1.2",
     "@types/lodash": "^4.14.184",
@@ -22,7 +22,6 @@
     "decode-uri-component": "0.2.1",
     "flatpickr": "^4.6.13",
     "he": "^1.2.0",
-    "iframe-resizer": "^4.3.11",
     "json5": "2.2.2",
     "lodash": "^4.17.21",
     "minimist": "^1.2.8",
