@@ -5,10 +5,7 @@ html, body, #root {
     margin: 0px;
 }
   
-#root {
-    padding: 8px;
-    box-sizing: border-box;
-}
+
 
 .problem-message {
     padding: 6px 10px 7px;
