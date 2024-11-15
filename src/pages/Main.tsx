@@ -9,7 +9,6 @@ import {
 import { useState } from "react";
 import { fetchAdminFeed, fetchAgentFeed } from "../api";
 import { FeedItem } from "../types";
-import { orderBy } from "lodash";
 import { NewsFeedItem } from "../components/FeedItem/NewsFeedItem";
 import { buildParentFeedPayload, parseContent } from "../utils";
 import he from "he";
@@ -83,7 +82,7 @@ export const Main = () => {
       });
     }
 
-    feedItems = orderBy(feedItems, ["created"], ["desc"]);
+    feedItems.sort((a, b) => (a.created > b.created) ? -1 : ((b.created > a.created) ? 1 : 0));
 
     setItems(feedItems);
     setIsLoading(false);
