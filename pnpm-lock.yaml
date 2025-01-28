@@ -35,9 +35,6 @@ importers:
       json5:
         specifier: 2.2.2
         version: 2.2.2
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
       minimist:
         specifier: ^1.2.8
         version: 1.2.8
