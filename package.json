@@ -14,7 +14,7 @@
     "bumpManifestVer": "node ./bin/bumpManifestVer.js"
   },
   "dependencies": {
-    "@deskpro/app-sdk": "5.1.1",
+    "@deskpro/app-sdk": "6.0.3",
     "@deskpro/deskpro-ui": "^8.2.1",
     "@types/he": "^1.2.3",
     "@types/lodash": "^4.17.15",
