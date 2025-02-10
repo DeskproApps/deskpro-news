@@ -18,7 +18,7 @@
     "@deskpro/deskpro-ui": "^8.2.1",
     "@types/he": "^1.2.3",
     "@types/lodash": "^4.17.15",
-    "axios": "1.7.4",
+    "axios": "1.7.9",
     "decode-uri-component": "0.2.1",
     "flatpickr": "^4.6.13",
     "he": "^1.2.0",
