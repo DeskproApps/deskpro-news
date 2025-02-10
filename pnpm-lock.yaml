@@ -24,8 +24,8 @@ importers:
         specifier: 1.7.4
         version: 1.7.4
       decode-uri-component:
-        specifier: 0.2.1
-        version: 0.2.1
+        specifier: 0.4.1
+        version: 0.4.1
       flatpickr:
         specifier: ^4.6.13
         version: 4.6.13
@@ -1402,9 +1402,9 @@ packages:
       supports-color:
         optional: true
 
-  decode-uri-component@0.2.1:
-    resolution: {integrity: sha512-XZHyaFJ6QMWhYmlz+UcmtaLeecNiXwkTGzCqG5WByt+1P1HnU6Siwf0TeP3OsZmlnGqQRSEMIxue0LLCaGY3dw==}
-    engines: {node: '>=0.10'}
+  decode-uri-component@0.4.1:
+    resolution: {integrity: sha512-+8VxcR21HhTy8nOt6jf20w0c9CADrw1O8d+VZ/YzzCt4bJ3uBjw+D1q2osAB8RnpwwaeYBxy0HyKQxD5JBMuuQ==}
+    engines: {node: '>=14.16'}
 
   dedent@1.5.3:
     resolution: {integrity: sha512-NHQtfOOW68WD8lgypbLA5oT+Bt0xXJhiYvoR6SmmNXZfpzOGXwdKWmcwG8N7PwVVWV3eF/68nmD9BaJSsTBhyQ==}
@@ -4442,7 +4442,7 @@ snapshots:
     dependencies:
       ms: 2.1.3
 
-  decode-uri-component@0.2.1: {}
+  decode-uri-component@0.4.1: {}
 
   dedent@1.5.3: {}
 
