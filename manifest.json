@@ -2,7 +2,7 @@
   "name": "@deskpro-apps/deskpro-news",
   "title": "Latest News",
   "description": "Get the latest updates from Deskpro, including new features and other product news",
-  "version": "1.0.40",
+  "version": "1.0.41",
   "scope": "agent",
   "isSingleInstall": false,
   "hasDevMode": true,
