@@ -53,6 +53,9 @@ importers:
       rss-to-json:
         specifier: ^2.1.1
         version: 2.1.1
+      semver:
+        specifier: ^7.7.1
+        version: 7.7.1
       simplebar:
         specifier: ^6.3.0
         version: 6.3.0
