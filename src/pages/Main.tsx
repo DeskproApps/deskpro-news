@@ -6,11 +6,11 @@ import {
   useDeskproAppTheme,
   useInitialisedDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { useState } from "react";
-import { fetchAdminFeed, fetchAgentFeed } from "../api";
+import { buildParentFeedPayload, filterReleases, parseContent } from "../utils";
 import { FeedItem } from "../types";
-import { NewsFeedItem } from "../components/FeedItem/NewsFeedItem";
-import { buildParentFeedPayload, parseContent } from "../utils";
+import { fetchAdminFeed, fetchAgentFeed, fetchReleaseFeed } from "../api";
+import { NewsFeedCard } from "../components/NewsFeedCard/NewsFeedCard";
+import { useState } from "react";
 import he from "he";
 
 const WEBSITE_NEWS_URL = "https://support.deskpro.com/en/news/product";
@@ -20,10 +20,10 @@ export const Main = () => {
   const { theme } = useDeskproAppTheme();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [locale, setLocale] = useState<string>("en-US");
   const [shownItems, setShownItems] = useState<number>(5);
   const [items, setItems] = useState<FeedItem[]>([]);
   const [isShown, setIsShown] = useState(false);
+  const [hasNewerVersion, setHasNewerVersion] = useState<boolean>(false);
 
   useInitialisedDeskproAppClient((client) => {
     client.registerElement("link_to_news", {
@@ -38,14 +38,13 @@ export const Main = () => {
       return;
     }
 
-    setLocale(context.data.currentAgent.locale);
-
     if (items.length) {
       setIsLoading(false);
       return;
     }
 
-    const feeds = [fetchAgentFeed()];
+    // Fetch all feeds in parallel & combine them
+    const feeds = [fetchAgentFeed(), fetchReleaseFeed()]
 
     if (context.data.currentAgent.isAdmin) {
       feeds.push(fetchAdminFeed());
@@ -62,6 +61,7 @@ export const Main = () => {
             ...item,
             title: he.decode(item.title),
             description: parseContent(he.decode(item.description)),
+            type: feed.type,
           })
         );
 
@@ -69,7 +69,6 @@ export const Main = () => {
       },
       []
     );
-
     if (context.data.env.releaseBuildTime > 0) {
       const releaseDate = new Date(context.data.env.releaseBuildTime * 1000);
       releaseDate.setHours(24, 0, 0);
@@ -81,32 +80,55 @@ export const Main = () => {
         return pubDate.getTime() <= releaseDate.getTime();
       });
     }
+    // Filter releases and get the final items
+    const { filteredItems, hasNewerVersion } = filterReleases(
+      context.data.env.release,
+      feedItems
+    )
+    // Sort by date (newest first)
+    const sortedItems = filteredItems.sort((a, b) =>
+      new Date(b.created).getTime() - new Date(a.created).getTime()
+    )
 
-    feedItems.sort((a, b) => (a.created > b.created) ? -1 : ((b.created > a.created) ? 1 : 0));
+    setItems(sortedItems)
+    setHasNewerVersion(hasNewerVersion)
+    setIsLoading(false)
 
-    setItems(feedItems);
-    setIsLoading(false);
-
-    return feedItems;
+    return { sortedItems, hasNewerVersion }
   };
 
   useDeskproAppEvents(
     {
       onReady: (context) => {
-        getFeed(context).then((items) => {
-          if (items && items.length) {
+        getFeed(context).then((res) => {
+
+          if (!res) {
+            return
+          }
+          const { sortedItems, hasNewerVersion: hasAnUpdate } = res
+
+          if (sortedItems && sortedItems.length) {
             const payload = buildParentFeedPayload(
               context.data.app.name,
-              items
+              sortedItems
             );
             parent.postMessage(payload, "*");
           }
+
+          // Focus the app if the user is an admin and there is an update
+          if (context.data.currentAgent.isAdmin && hasAnUpdate) {
+
+            client?.focus()
+          }
         });
         setIsShown(false);
+
+
       },
       onShow: (context) => {
         setIsShown(true);
         getFeed(context);
+        console.log(context.data.env.release)
       },
     },
     [client]
@@ -142,15 +164,24 @@ export const Main = () => {
   }
 
   return (
-    <div style={{ paddingBottom: "40px" }}>
+    <div style={{ paddingBottom: "40px", display: "flex", flexDirection: "column", gap: 12 }}>
+      {/* Show a banner if a new version is available */}
+      {hasNewerVersion && (<div style={{
+        backgroundColor: theme.colors.sky_blue10,
+        color: theme.colors.navy100,
+        padding: 12,
+        borderRadius: "5px",
+        textAlign: "center",
+        fontWeight: 600
+      }}>A new release version is available! <a href="https://support.deskpro.com/news/deskpro-releases" target="_blank" style={{ color: "inherit" }}>Read More.</a></div>)}
+
       {items.slice(0, shownItems).map((item, idx) => (
-        <NewsFeedItem
-          item={item}
+        <NewsFeedCard
+          newsMeta={item}
           shownItems={shownItems}
           setShownItems={setShownItems}
-          locale={locale}
+          isLastItem={idx === shownItems - 1}
           key={idx}
-          i={idx}
         />
       ))}
     </div>
