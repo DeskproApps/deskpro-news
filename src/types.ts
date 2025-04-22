@@ -5,7 +5,14 @@ export type Feed = {
     image: string;
     category: string[];
     items: FeedItem[];
+    type: "product-agent" | "product-admin" | "release";
 };
+
+type Enclosure ={
+    url? :string,
+    length?: string,
+    type?: string
+}
 
 export type FeedItem = {
     title: string;
@@ -13,6 +20,8 @@ export type FeedItem = {
     link: string;
     published: number;
     created: number;
+    enclosures?: Enclosure[]
+    type: Feed["type"]
 };
 
 export type ParentFeedPayload = {
