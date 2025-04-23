@@ -6,10 +6,10 @@ import {
   useDeskproAppTheme,
   useInitialisedDeskproAppClient,
 } from "@deskpro/app-sdk";
-import { buildParentFeedPayload, filterReleases, parseContent } from "../utils";
-import { FeedItem } from "../types";
-import { fetchAdminFeed, fetchAgentFeed, fetchReleaseFeed } from "../api";
-import { NewsFeedCard } from "../components/NewsFeedCard/NewsFeedCard";
+import { buildParentFeedPayload, filterReleases, parseContent } from "../../utils";
+import { ContextData, FeedItem } from "../..//types";
+import { fetchAdminFeed, fetchAgentFeed, fetchReleaseFeed } from "../../api";
+import { NewsFeedCard } from "../../components/NewsFeedCard/NewsFeedCard";
 import { useState } from "react";
 import he from "he";
 
@@ -38,10 +38,12 @@ const ITEMS_PER_PAGE = 5
     setShownItems(prev => prev + ITEMS_PER_PAGE)
   }
 
-  const getFeed = async (context: Context) => {
+  const getFeed = async (context: Context<ContextData, unknown>) => {
     if (!(context && client)) {
       return;
     }
+
+    console.log(context.data)
 
     if (items.length) {
       setIsLoading(false);
@@ -51,7 +53,7 @@ const ITEMS_PER_PAGE = 5
     // Fetch all feeds in parallel & combine them
     const feeds = [fetchAgentFeed(), fetchReleaseFeed()]
 
-    if (context.data.currentAgent.isAdmin) {
+    if (context.data?.currentAgent.isAdmin) {
       feeds.push(fetchAdminFeed());
     }
 
@@ -74,7 +76,7 @@ const ITEMS_PER_PAGE = 5
       },
       []
     );
-    if (context.data.env.releaseBuildTime > 0) {
+    if (context.data?.env.releaseBuildTime && context.data.env.releaseBuildTime > 0) {
       const releaseDate = new Date(context.data.env.releaseBuildTime * 1000);
       releaseDate.setHours(24, 0, 0);
 
@@ -87,7 +89,7 @@ const ITEMS_PER_PAGE = 5
     }
     // Filter releases and get the final items
     const { filteredItems, hasNewerVersion } = filterReleases(
-      context.data.env.release,
+      context.data?.env.release ?? "",
       feedItems
     )
     // Sort by date (newest first)
