@@ -15,7 +15,7 @@
     {
       "target": "global",
       "entrypoint": "index.html",
-      "options": { "width": 520 }
+      "options": { "width": 520, "height": 700 }
     }
   ],
   "settings": {},
