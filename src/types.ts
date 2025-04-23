@@ -30,3 +30,30 @@ export type ParentFeedPayload = {
     appEventId: "newsData";
     news: FeedItem[];
 };
+
+
+export type ContextData = {
+    app: {
+        description: string;
+        id: string;
+        instanceId: string;
+        name: string;
+        title: string;
+    },
+    currentAgent: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        primaryEmail: string;
+        locale: string;
+        emails: string[];
+        isAdmin: boolean;
+        isAgent: boolean;
+        isUser: boolean;
+    },
+    env: {
+        envId: string;
+        release: string;
+        releaseBuildTime: number;
+    }
+}
