@@ -19,7 +19,7 @@ export function NewsFeedCard(props: Readonly<NewsFeedCardProps>) {
     const cardRef = useRef<HTMLAnchorElement>(null)
 
     const publishedDate = new Date(newsMeta.published)
-    const coverSrc = newsMeta.enclosures?.[0]?.url
+    const coverSrc = newsMeta.enclosures?.[0]?.url ?? "/news-app-cover.png"
 
     const monthDay = publishedDate.toLocaleString('en-US', { month: 'short', day: '2-digit' }).toUpperCase()
     const year = publishedDate.getFullYear()
