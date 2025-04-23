@@ -24,6 +24,7 @@ export const Main = () => {
   const [items, setItems] = useState<FeedItem[]>([]);
   const [isShown, setIsShown] = useState(false);
   const [hasNewerVersion, setHasNewerVersion] = useState<boolean>(false);
+const ITEMS_PER_PAGE = 5
 
   useInitialisedDeskproAppClient((client) => {
     client.registerElement("link_to_news", {
@@ -32,6 +33,10 @@ export const Main = () => {
       hasIcon: false,
     });
   });
+
+  function handleAllItemsSeen() {
+    setShownItems(prev => prev + ITEMS_PER_PAGE)
+  }
 
   const getFeed = async (context: Context) => {
     if (!(context && client)) {
@@ -177,10 +182,9 @@ export const Main = () => {
       {items.slice(0, shownItems).map((item, idx) => (
         <NewsFeedCard
           newsMeta={item}
-          shownItems={shownItems}
-          setShownItems={setShownItems}
-          isLastItem={idx === shownItems - 1}
+                    isLastItem={idx === shownItems - 1}
           key={idx}
+onAllItemsSeen={handleAllItemsSeen}
         />
       ))}
     </div>

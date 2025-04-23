@@ -1,21 +1,20 @@
-import { H0, P4, } from "@deskpro/deskpro-ui";
-import { FeedItem } from "../../types";
 import "./NewsFeedCard.css";
-import { useDeskproAppTheme } from "@deskpro/app-sdk";
+import { FeedItem } from "../../types";
+import { H0, P4, } from "@deskpro/deskpro-ui";
 import { removeContentImages } from "../../utils";
+import { useDeskproAppTheme } from "@deskpro/app-sdk";
 import { useEffect, useRef } from "react";
 
 
 interface NewsFeedCardProps {
     newsMeta: FeedItem;
-    shownItems: number;
-    setShownItems: (shownItems: number) => void;
     isLastItem: boolean;
+    onAllItemsSeen: () => void
 }
 
 export function NewsFeedCard(props: Readonly<NewsFeedCardProps>) {
 
-    const { newsMeta, shownItems, setShownItems, isLastItem } = props
+    const { newsMeta, isLastItem, onAllItemsSeen } = props
     const { theme } = useDeskproAppTheme()
     const cardRef = useRef<HTMLAnchorElement>(null)
 
@@ -23,17 +22,18 @@ export function NewsFeedCard(props: Readonly<NewsFeedCardProps>) {
     const coverSrc = newsMeta.enclosures?.[0]?.url
 
     const monthDay = publishedDate.toLocaleString('en-US', { month: 'short', day: '2-digit' }).toUpperCase()
-    const year = publishedDate.getFullYear();
+    const year = publishedDate.getFullYear()
 
+    // Effect to detect when the last item becomes visible
     useEffect(() => {
         if (!isLastItem || !cardRef.current) {
-            return;
+            return
         }
 
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
-                    setShownItems(shownItems + 5);
+                    onAllItemsSeen()
                 }
             },
             {
@@ -43,12 +43,12 @@ export function NewsFeedCard(props: Readonly<NewsFeedCardProps>) {
             }
         );
 
-        observer.observe(cardRef.current);
+        observer.observe(cardRef.current)
 
         return () => {
-            observer.disconnect();
+            observer.disconnect()
         };
-    }, [isLastItem, shownItems, setShownItems])
+    }, [isLastItem, onAllItemsSeen])
 
 
 
