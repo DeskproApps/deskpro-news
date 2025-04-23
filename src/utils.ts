@@ -36,14 +36,19 @@ export function filterReleases(currentVersion: string, items: FeedItem[]): { fil
                 return true
             }
 
-            // Extract version - only matches XXXX.X or XXXX.X.X
-            const versionMatch = item.title.match(/(\d{4}\.\d+(?:\.\d+)?)/)
-            if (!versionMatch) {
+            // Check for release notes matching "Deskpro Release" and "Deskpro Horizon Release" patterns
+            const versionMatch = item.title.match(
+                /Deskpro (?:Horizon )?Release (?<version>\d{4}\.\d+(?:\.\d+)?)/
+            );
+
+            if (!versionMatch?.groups?.version) {
                 return false
             }
 
+            const versionString = versionMatch.groups.version
+
             // Normalise to XXXX.X.X format
-            const versionParts = versionMatch[1].split('.')
+            const versionParts = versionString.split('.')
             if (versionParts.length === 2) versionParts.push('0')
             const normalizedVersion = versionParts.join('.')
 
