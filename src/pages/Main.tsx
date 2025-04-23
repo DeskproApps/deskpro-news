@@ -128,7 +128,6 @@ export const Main = () => {
       onShow: (context) => {
         setIsShown(true);
         getFeed(context);
-        console.log(context.data.env.release)
       },
     },
     [client]
