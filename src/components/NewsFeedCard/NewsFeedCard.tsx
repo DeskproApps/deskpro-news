@@ -66,13 +66,13 @@ export function NewsFeedCard(props: Readonly<NewsFeedCardProps>) {
             </div>
 
             <div className="news-feed-card-body">
-                <H0>{newsMeta?.title}</H0>
+                <H0>{newsMeta.title}</H0>
 
                 <div
                     className="news-feed-card-body-content"
                     tabIndex={-1}
                     dangerouslySetInnerHTML={{
-                        __html: removeContentImages(newsMeta?.description ?? ""),
+                        __html: removeContentImages(newsMeta.description ?? ""),
                     }}
                 />
             </div>

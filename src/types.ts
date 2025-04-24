@@ -16,7 +16,7 @@ type Enclosure ={
 
 export type FeedItem = {
     title: string;
-    description: string;
+    description?: string;
     link: string;
     published: number;
     created: number;
@@ -53,7 +53,7 @@ export type ContextData = {
     },
     env: {
         envId: string;
-        release: string;
+        release?: string;
         releaseBuildTime: number;
     }
 }

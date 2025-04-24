@@ -24,7 +24,7 @@ export const Main = () => {
   const [items, setItems] = useState<FeedItem[]>([]);
   const [isShown, setIsShown] = useState(false);
   const [hasNewerVersion, setHasNewerVersion] = useState<boolean>(false);
-const ITEMS_PER_PAGE = 5
+  const ITEMS_PER_PAGE = 5
 
   useInitialisedDeskproAppClient((client) => {
     client.registerElement("link_to_news", {
@@ -39,11 +39,9 @@ const ITEMS_PER_PAGE = 5
   }
 
   const getFeed = async (context: Context<ContextData, unknown>) => {
-    if (!(context && client)) {
+    if (!(context.data && client)) {
       return;
     }
-
-    console.log(context.data)
 
     if (items.length) {
       setIsLoading(false);
@@ -53,7 +51,7 @@ const ITEMS_PER_PAGE = 5
     // Fetch all feeds in parallel & combine them
     const feeds = [fetchAgentFeed(), fetchReleaseFeed()]
 
-    if (context.data?.currentAgent.isAdmin) {
+    if (context.data.currentAgent.isAdmin) {
       feeds.push(fetchAdminFeed());
     }
 
@@ -63,11 +61,11 @@ const ITEMS_PER_PAGE = 5
           return combined;
         }
 
-        (feed?.items ?? []).forEach((item) =>
+        (feed.items).forEach((item) =>
           combined.push({
             ...item,
             title: he.decode(item.title),
-            description: parseContent(he.decode(item.description)),
+            description: parseContent(he.decode(item.description ?? "")),
             type: feed.type,
           })
         );
@@ -76,7 +74,7 @@ const ITEMS_PER_PAGE = 5
       },
       []
     );
-    if (context.data?.env.releaseBuildTime && context.data.env.releaseBuildTime > 0) {
+    if (context.data.env.releaseBuildTime && context.data.env.releaseBuildTime > 0) {
       const releaseDate = new Date(context.data.env.releaseBuildTime * 1000);
       releaseDate.setHours(24, 0, 0);
 
@@ -89,7 +87,7 @@ const ITEMS_PER_PAGE = 5
     }
     // Filter releases and get the final items
     const { filteredItems, hasNewerVersion } = filterReleases(
-      context.data?.env.release ?? "",
+      context.data.env.release ?? "",
       feedItems
     )
     // Sort by date (newest first)
@@ -106,22 +104,25 @@ const ITEMS_PER_PAGE = 5
 
   useDeskproAppEvents(
     {
-      onReady: (context) => {
-        getFeed(context).then((res) => {
+      onReady: (context: Context<ContextData, unknown>) => {
+
+        void getFeed(context).then((res) => {
+          if (!context.data) {
+            return;
+          }
 
           if (!res) {
             return
           }
           const { sortedItems, hasNewerVersion: hasAnUpdate } = res
 
-          if (sortedItems && sortedItems.length) {
+          if (sortedItems.length) {
             const payload = buildParentFeedPayload(
               context.data.app.name,
               sortedItems
             );
             parent.postMessage(payload, "*");
           }
-
           // Focus the app if the user is an admin and there is an update
           if (context.data.currentAgent.isAdmin && hasAnUpdate) {
 
@@ -132,9 +133,9 @@ const ITEMS_PER_PAGE = 5
 
 
       },
-      onShow: (context) => {
+      onShow: (context: Context<ContextData, unknown>) => {
         setIsShown(true);
-        getFeed(context);
+        void getFeed(context);
       },
     },
     [client]
@@ -184,9 +185,9 @@ const ITEMS_PER_PAGE = 5
       {items.slice(0, shownItems).map((item, idx) => (
         <NewsFeedCard
           newsMeta={item}
-                    isLastItem={idx === shownItems - 1}
+          isLastItem={idx === shownItems - 1}
           key={idx}
-onAllItemsSeen={handleAllItemsSeen}
+          onAllItemsSeen={handleAllItemsSeen}
         />
       ))}
     </div>

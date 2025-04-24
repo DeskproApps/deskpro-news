@@ -13,7 +13,7 @@ const fetchFeed = async (url: string, type: Feed["type"]): Promise<Feed | null> 
     try {
         const feed = await parse(url);
 
-        if (!(feed?.items ?? []).length) {
+        if (!feed.items.length) {
             return null;
         }
 
@@ -22,8 +22,8 @@ const fetchFeed = async (url: string, type: Feed["type"]): Promise<Feed | null> 
             type
         }
     } catch (e) {
-        console.error(e);
+        // eslint-disable-next-line no-console
+        console.error(e instanceof Error ? e.message : "An unknown error occurred while fetching the feed");
+        return null;
     }
-
-    return null;
 };
