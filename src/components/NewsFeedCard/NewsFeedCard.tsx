@@ -1,7 +1,7 @@
 import "./NewsFeedCard.css";
-import { FeedItem } from "../../types";
+import { FeedItem } from "@/types";
 import { H0, P4, } from "@deskpro/deskpro-ui";
-import { removeContentImages } from "../../utils";
+import { removeContentImages } from "@/utils";
 import { useDeskproAppTheme } from "@deskpro/app-sdk";
 import { useEffect, useRef } from "react";
 

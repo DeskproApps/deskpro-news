@@ -15,7 +15,11 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vite/client", "jest", "testing-library__jest-dom"]
+    "types": ["vite/client", "jest", "@testing-library/jest-dom", "@typescript/lib-dom"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["./src", "vite.config.ts"],
 }

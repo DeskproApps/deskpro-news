@@ -1,5 +1,5 @@
+import { Feed } from "@/types";
 import { parse } from "rss-to-json";
-import { Feed } from "./types";
 
 const AGENT_NEWS_RSS_URL = "https://support.deskpro.com/en/news/product-agent.rss";
 const ADMIN_NEWS_RSS_URL = "https://support.deskpro.com/en/news/product-admin.rss";

@@ -1,15 +1,8 @@
-import {
-  Context,
-  LoadingSpinner,
-  useDeskproAppClient,
-  useDeskproAppEvents,
-  useDeskproAppTheme,
-  useInitialisedDeskproAppClient,
-} from "@deskpro/app-sdk";
-import { buildParentFeedPayload, filterReleases, parseContent } from "../../utils";
-import { ContextData, FeedItem } from "../..//types";
-import { fetchAdminFeed, fetchAgentFeed, fetchReleaseFeed } from "../../api";
-import { NewsFeedCard } from "../../components/NewsFeedCard/NewsFeedCard";
+import { buildParentFeedPayload, filterReleases, parseContent } from "@/utils";
+import { Context, LoadingSpinner, useDeskproAppClient, useDeskproAppEvents, useDeskproAppTheme, useInitialisedDeskproAppClient } from "@deskpro/app-sdk";
+import { ContextData, FeedItem } from "@/types";
+import { fetchAdminFeed, fetchAgentFeed, fetchReleaseFeed } from "@/api";
+import { NewsFeedCard } from "@/components/NewsFeedCard/NewsFeedCard";
 import { useState } from "react";
 import he from "he";
 

@@ -1,6 +1,6 @@
-import { DeskproAppProvider } from "@deskpro/app-sdk";
 import "./App.css";
-import { Main } from "./pages/home/Main";
+import { DeskproAppProvider } from "@deskpro/app-sdk";
+import { Main } from "@/pages/home/Main";
 
 import "flatpickr/dist/themes/light.css";
 import "tippy.js/dist/tippy.css";

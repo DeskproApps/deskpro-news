@@ -1,4 +1,4 @@
-import { FeedItem, ParentFeedPayload } from "./types";
+import { FeedItem, ParentFeedPayload } from "@/types";
 import semver from 'semver';
 
 export const parseContent = (content: string): string => {
