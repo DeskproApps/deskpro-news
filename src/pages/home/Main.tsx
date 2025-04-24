@@ -1,4 +1,4 @@
-import { buildParentFeedPayload, filterReleases, parseContent } from "@/utils";
+import { buildParentFeedPayload, filterAndCheckNewReleases, parseContent } from "@/utils";
 import { Context, LoadingSpinner, useDeskproAppClient, useDeskproAppEvents, useDeskproAppTheme, useInitialisedDeskproAppClient } from "@deskpro/app-sdk";
 import { ContextData, FeedItem } from "@/types";
 import { fetchAdminFeed, fetchAgentFeed, fetchReleaseFeed } from "@/api";
@@ -79,7 +79,7 @@ export const Main = () => {
       });
     }
     // Filter releases and get the final items
-    const { filteredItems, hasNewerVersion } = filterReleases(
+    const { filteredItems, hasNewerVersion } = filterAndCheckNewReleases(
       context.data.env.release ?? "",
       feedItems
     )
