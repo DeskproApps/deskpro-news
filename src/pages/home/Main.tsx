@@ -2,6 +2,7 @@ import { buildParentFeedPayload, filterAndCheckNewReleases, parseContent } from 
 import { Context, LoadingSpinner, useDeskproAppClient, useDeskproAppEvents, useDeskproAppTheme, useInitialisedDeskproAppClient } from "@deskpro/app-sdk";
 import { ContextData, FeedItem } from "@/types";
 import { fetchAdminFeed, fetchAgentFeed, fetchReleaseFeed } from "@/api";
+import { FilteredReleasesResponse } from "@/utils/filterAndCheckNewReleases/filterAndCheckNewReleases";
 import { NewsFeedCard } from "@/components/NewsFeedCard/NewsFeedCard";
 import { useState } from "react";
 import he from "he";
@@ -14,9 +15,9 @@ export const Main = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [shownItems, setShownItems] = useState<number>(5);
-  const [items, setItems] = useState<FeedItem[]>([]);
+  const [newsArticles, setNewsArticles] = useState<FeedItem[]>([])
   const [isShown, setIsShown] = useState(false);
-  const [hasNewerVersion, setHasNewerVersion] = useState<boolean>(false);
+  const [latestRelease, setLatestRelease] = useState<FilteredReleasesResponse["latestRelease"]>(undefined)
   const ITEMS_PER_PAGE = 5
 
   useInitialisedDeskproAppClient((client) => {
@@ -36,7 +37,7 @@ export const Main = () => {
       return;
     }
 
-    if (items.length) {
+    if (newsArticles.length) {
       setIsLoading(false);
       return;
     }
@@ -48,7 +49,7 @@ export const Main = () => {
       feeds.push(fetchAdminFeed());
     }
 
-    let feedItems = (await Promise.all(feeds)).reduce<FeedItem[]>(
+    let feedArticles = (await Promise.all(feeds)).reduce<FeedItem[]>(
       (combined, feed) => {
         if (feed === null) {
           return combined;
@@ -71,28 +72,28 @@ export const Main = () => {
       const releaseDate = new Date(context.data.env.releaseBuildTime * 1000);
       releaseDate.setHours(24, 0, 0);
 
-      feedItems = feedItems.filter((item) => {
-        const pubDate = new Date(item.published);
+      feedArticles = feedArticles.filter((feedArticle) => {
+        const pubDate = new Date(feedArticle.published)
         pubDate.setHours(24, 0, 0);
 
         return pubDate.getTime() <= releaseDate.getTime();
       });
     }
-    // Filter releases and get the final items
-    const { filteredItems, hasNewerVersion } = filterAndCheckNewReleases(
+    // Filter releases and get the final articles
+    const { filteredNewsArticles, latestRelease: mostRecentRelease } = filterAndCheckNewReleases(
       context.data.env.release ?? "",
-      feedItems
+      feedArticles
     )
     // Sort by date (newest first)
-    const sortedItems = filteredItems.sort((a, b) =>
+    const sortedNewsArticles = filteredNewsArticles.sort((a, b) =>
       new Date(b.created).getTime() - new Date(a.created).getTime()
     )
 
-    setItems(sortedItems)
-    setHasNewerVersion(hasNewerVersion)
+    setNewsArticles(sortedNewsArticles)
+    setLatestRelease(mostRecentRelease)
     setIsLoading(false)
 
-    return { sortedItems, hasNewerVersion }
+    return { sortedNewsArticles, latestRelease: mostRecentRelease }
   };
 
   useDeskproAppEvents(
@@ -107,17 +108,17 @@ export const Main = () => {
           if (!res) {
             return
           }
-          const { sortedItems, hasNewerVersion: hasAnUpdate } = res
+          const { sortedNewsArticles, latestRelease: latestReleaseVersion } = res
 
-          if (sortedItems.length) {
+          if (sortedNewsArticles.length) {
             const payload = buildParentFeedPayload(
               context.data.app.name,
-              sortedItems
+              sortedNewsArticles
             );
             parent.postMessage(payload, "*");
           }
-          // Focus the app if the user is an admin and there is an update
-          if (context.data.currentAgent.isAdmin && hasAnUpdate) {
+          // Focus the app if the user is an admin and there is a new release version/note available.
+          if (context.data.currentAgent.isAdmin && latestReleaseVersion) {
 
             client?.focus()
           }
@@ -142,7 +143,7 @@ export const Main = () => {
     return <LoadingSpinner />;
   }
 
-  if (!items.length) {
+  if (!newsArticles.length) {
     return (
       <div
         className="problem-message"
@@ -166,18 +167,18 @@ export const Main = () => {
   return (
     <div style={{ paddingBottom: "40px", display: "flex", flexDirection: "column", gap: 12 }}>
       {/* Show a banner if a new version is available */}
-      {hasNewerVersion && (<div style={{
+      {latestRelease && (<div style={{
         backgroundColor: theme.colors.sky_blue10,
         color: theme.colors.navy100,
         padding: 12,
         borderRadius: "5px",
         textAlign: "center",
         fontWeight: 600
-      }}>A new release version is available! <a href="https://support.deskpro.com/news/deskpro-releases" target="_blank" style={{ color: "inherit" }}>Read More.</a></div>)}
+      }}>A new release version is available! <a href={latestRelease.url} target="_blank" style={{ color: "inherit" }}>Read More.</a></div>)}
 
-      {items.slice(0, shownItems).map((item, idx) => (
+      {newsArticles.slice(0, shownItems).map((newsArticle, idx) => (
         <NewsFeedCard
-          newsMeta={item}
+          newsMeta={newsArticle}
           isLastItem={idx === shownItems - 1}
           key={idx}
           onAllItemsSeen={handleAllItemsSeen}
