@@ -1,10 +1,8 @@
 import "./NewsFeedCard.css";
 import { FeedItem } from "@/types";
-import { H0, P4, } from "@deskpro/deskpro-ui";
 import { removeContentImages } from "@/utils";
 import { useDeskproAppTheme } from "@deskpro/app-sdk";
 import { useEffect, useRef } from "react";
-
 
 interface NewsFeedCardProps {
     newsMeta: FeedItem;
@@ -20,9 +18,6 @@ export function NewsFeedCard(props: Readonly<NewsFeedCardProps>) {
 
     const publishedDate = new Date(newsMeta.published)
     const coverSrc = newsMeta.enclosures?.[0]?.url ?? "/news-app-cover.png"
-
-    const monthDay = publishedDate.toLocaleString('en-US', { month: 'short', day: '2-digit' }).toUpperCase()
-    const year = publishedDate.getFullYear()
 
     // Effect to detect when the last item becomes visible
     useEffect(() => {
@@ -55,12 +50,33 @@ export function NewsFeedCard(props: Readonly<NewsFeedCardProps>) {
     return (
         <a ref={cardRef} href={newsMeta.link} target="_blank" className="news-feed-card"
             style={{
-                '--grey-40': theme.colors.grey40,
-                '--dark-40': theme.colors.grey100,
+                '--system-80': theme.colors.systemShade80,
+                '--grey-100': theme.colors.grey100,
+                '--cyan-100': theme.colors.cyan100,
                 '--grey-20': theme.colors.grey20,
             } as React.CSSProperties & { [key: string]: string }}
         >
-            <div className="news-feed-card-date"><P4>{monthDay}</P4> <P4>{year}</P4></div>
+            <h2 className="news-title">{newsMeta.title}</h2>
+
+            <div className="news-publish-date">{publishedDate.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            })}</div>
+
+            <div className="news-article-content"
+                tabIndex={-1}
+                dangerouslySetInnerHTML={{
+                    __html: removeContentImages(newsMeta.description ?? ""),
+                }} ></div>
+
+            <div className="news-cover-image">
+                <img src={coverSrc} loading="lazy" />
+            </div>
+
+
+
+            {/* <div className="news-feed-card-date"><P4>{monthDay}</P4> <P4>{year}</P4></div>
             <div className="news-feed-card-cover">
                 <img src={coverSrc} loading="lazy" />
             </div>
@@ -75,7 +91,7 @@ export function NewsFeedCard(props: Readonly<NewsFeedCardProps>) {
                         __html: removeContentImages(newsMeta.description ?? ""),
                     }}
                 />
-            </div>
+            </div> */}
 
         </a>
     )

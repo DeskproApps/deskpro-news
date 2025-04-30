@@ -81,8 +81,8 @@ describe("NewsFeedCard", () => {
         })
 
         await waitFor(() => {
-            expect(screen.getByText("JAN 23")).toBeInTheDocument()
-            expect(screen.getByText("2025")).toBeInTheDocument()
+            expect(screen.getByText("January 23, 2025")).toBeInTheDocument()
+            // expect(screen.getByText("2025")).toBeInTheDocument()
         })
     })
 

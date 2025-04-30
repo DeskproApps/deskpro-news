@@ -1,18 +1,22 @@
 import { buildParentFeedPayload, filterAndCheckNewReleases, parseContent } from "@/utils";
-import { Context, LoadingSpinner, useDeskproAppClient, useDeskproAppEvents, useDeskproAppTheme, useInitialisedDeskproAppClient } from "@deskpro/app-sdk";
+import { Context, HorizontalDivider, LoadingSpinner, useDeskproAppClient, useDeskproAppEvents, useDeskproAppTheme, useInitialisedDeskproAppClient } from "@deskpro/app-sdk";
 import { ContextData, FeedItem } from "@/types";
 import { fetchAdminFeed, fetchAgentFeed, fetchReleaseFeed } from "@/api";
 import { FilteredReleasesResponse } from "@/utils/filterAndCheckNewReleases/filterAndCheckNewReleases";
 import { NewsFeedCard } from "@/components/NewsFeedCard/NewsFeedCard";
-import { useState } from "react";
+import { Fragment, useState } from "react";
+import { faBullhorn } from "@fortawesome/free-solid-svg-icons";
+import AnnouncementBanner from "@/components/AnnouncementBanner";
 import he from "he";
+import TwoColumnNavigation from "@/components/TwoColumnNavigation";
 
 const WEBSITE_NEWS_URL = "https://support.deskpro.com/en/news/product";
 
-export const Main = () => {
+export default function ReleaseAndNewsFeedPage() {
   const { client } = useDeskproAppClient();
   const { theme } = useDeskproAppTheme();
 
+  const [selectedTab, setSelectedTab] = useState<"one" | "two">("one")
   const [isLoading, setIsLoading] = useState(true);
   const [shownItems, setShownItems] = useState<number>(5);
   const [newsArticles, setNewsArticles] = useState<FeedItem[]>([])
@@ -26,6 +30,8 @@ export const Main = () => {
       type: "cta_external_link",
       hasIcon: false,
     });
+
+    client.setTitle("What's New?");
   });
 
   function handleAllItemsSeen() {
@@ -81,7 +87,7 @@ export const Main = () => {
     }
     // Filter releases and get the final articles
     const { filteredNewsArticles, latestRelease: mostRecentRelease } = filterAndCheckNewReleases(
-      context.data.env.release ?? "",
+      context.data.env.release ?? "0.0.0",
       feedArticles
     )
     // Sort by date (newest first)
@@ -164,26 +170,43 @@ export const Main = () => {
     );
   }
 
-  return (
-    <div style={{ paddingBottom: "40px", display: "flex", flexDirection: "column", gap: 12 }}>
-      {/* Show a banner if a new version is available */}
-      {latestRelease && (<div style={{
-        backgroundColor: theme.colors.sky_blue10,
-        color: theme.colors.navy100,
-        padding: 12,
-        borderRadius: "5px",
-        textAlign: "center",
-        fontWeight: 600
-      }}>A new release version is available! <a href={latestRelease.url} target="_blank" style={{ color: "inherit" }}>Read More.</a></div>)}
+  const filteredArticles = newsArticles.filter(newsArticle => {
+    if (selectedTab === "one") {
+      return newsArticle.type !== "release";
+    } else {
+      return newsArticle.type === "release";
+    }
+  })
 
-      {newsArticles.slice(0, shownItems).map((newsArticle, idx) => (
-        <NewsFeedCard
-          newsMeta={newsArticle}
-          isLastItem={idx === shownItems - 1}
-          key={idx}
-          onAllItemsSeen={handleAllItemsSeen}
-        />
-      ))}
+
+  return (
+    <div style={{ padding: "12px", display: "flex", flexDirection: "column", gap: 20 }}>
+
+      {/* Show a banner if a new version is available */}
+      {latestRelease && (<AnnouncementBanner icon={faBullhorn} title={`${latestRelease.title} is available`}>
+        Explore what’s new in the latest version of Deskpro, or for more detail see the <a href={latestRelease.url} target="_blank">Release Notes</a>.
+      </AnnouncementBanner>)}
+
+      <TwoColumnNavigation selected={selectedTab} onOneNavigate={() => { setSelectedTab("one") }} onTwoNavigate={() => { setSelectedTab("two") }} />
+
+      {!filteredArticles.length && <div style={{ textAlign: "center" }}>No article available</div>}
+
+      {filteredArticles.slice(0, shownItems).map((newsArticle, idx) => {
+        const isLastItem = idx === shownItems - 1
+        return (
+          <Fragment>
+            <NewsFeedCard
+              newsMeta={newsArticle}
+              isLastItem={isLastItem}
+              key={idx}
+              onAllItemsSeen={handleAllItemsSeen}
+            />
+
+            {!isLastItem && <HorizontalDivider />}
+          </Fragment>
+
+        )
+      })}
     </div>
   );
 };
