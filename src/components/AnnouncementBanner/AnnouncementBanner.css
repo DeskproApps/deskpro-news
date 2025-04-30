@@ -1,0 +1,54 @@
+.announcement-banner {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--cyan-10);
+    padding: 12px;
+    border: 1px solid var(--cyan-80);
+    border-radius: 4px;
+}
+
+.announcement-icon {
+    font-size: 14px;
+    color: var(--cyan-100)
+}
+
+.announcement-left {
+    display: flex;
+    font-size: 14px;
+    gap: 12px;
+}
+
+.announcement-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.announcement-text h2,
+.announcement-text p {
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
+}
+
+.announcement-text p {
+    font-weight: 500;
+}
+
+
+.announcement-text p a {
+    color: var(--cyan-100);
+    text-decoration: underline;
+}
+
+.announcement-close-button{
+    background-color: transparent;
+    border: none;
+    color: var(--grey-60);
+    cursor: pointer;
+    transition: 0.25s ease-in-out;
+}
+
+.announcement-close-button:hover {
+    color: var(--red-60);
+}
