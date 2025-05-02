@@ -13,7 +13,7 @@ import TwoColumnNavigation from "@/components/TwoColumnNavigation";
 
 const WEBSITE_NEWS_URL = "https://support.deskpro.com/en/news/product";
 
-export default function ReleaseAndNewsFeedPage() {
+export default function ReleaseAndNewsFeedView() {
   const { client } = useDeskproAppClient()
   const { theme } = useDeskproAppTheme()
 

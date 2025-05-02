@@ -5,12 +5,12 @@ import "flatpickr/dist/themes/light.css";
 import "simplebar/dist/simplebar.min.css";
 import "tippy.js/dist/tippy.css";
 import { DeskproAppProvider } from "@deskpro/app-sdk";
-import ReleaseAndNewsFeedPage from "./pages/release-and-news-feed";
+import ReleaseAndNewsFeedView from "./components/ReleaseAndNewsFeedView";
 
 function App() {
   return (
       <DeskproAppProvider>
-        <ReleaseAndNewsFeedPage />
+        <ReleaseAndNewsFeedView />
       </DeskproAppProvider>
   );
 }
