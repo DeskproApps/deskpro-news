@@ -1,0 +1,1 @@
+export const WEBSITE_NEWS_URL = "https://support.deskpro.com/en/news/product";

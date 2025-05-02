@@ -1,5 +1,5 @@
 import { buildParentFeedPayload, getSemanticVersion, filterAndCheckNewReleases, getNormalisedVersionNumber, parseContent } from "@/utils";
-import { Context, HorizontalDivider, LoadingSpinner, useDeskproAppClient, useDeskproAppEvents, useDeskproAppTheme, useInitialisedDeskproAppClient } from "@deskpro/app-sdk";
+import { Context, HorizontalDivider, LoadingSpinner, useDeskproAppClient, useDeskproAppEvents, useDeskproAppTheme } from "@deskpro/app-sdk";
 import { ContextData, FeedItem } from "@/types";
 import { faBullhorn } from "@fortawesome/free-solid-svg-icons";
 import { fetchAdminFeed, fetchAgentFeed, fetchReleaseFeed } from "@/api";
@@ -10,10 +10,15 @@ import AnnouncementBanner from "@/components/AnnouncementBanner";
 import he from "he";
 import semver from "semver";
 import TwoColumnNavigation from "@/components/TwoColumnNavigation";
+import { WEBSITE_NEWS_URL } from "@/constants";
 
-const WEBSITE_NEWS_URL = "https://support.deskpro.com/en/news/product";
+interface ReleaseAndNewsFeedViewProps {
+  target: "modal" | "global"
+}
 
-export default function ReleaseAndNewsFeedView() {
+export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFeedViewProps>) {
+  const { target } = props
+
   const { client } = useDeskproAppClient()
   const { theme } = useDeskproAppTheme()
 
@@ -25,17 +30,6 @@ export default function ReleaseAndNewsFeedView() {
   const [latestUpgradeReleaseNote, setLatestUpgradeReleaseNote] = useState<FeedItem | null>(null)
   const [latestReleaseNote, setLatestReleaseNote] = useState<FilteredReleasesResponse["latestRelease"]>(undefined)
   const ITEMS_PER_PAGE = 5
-
-  useInitialisedDeskproAppClient((client) => {
-    client.registerElement("link_to_news", {
-      url: WEBSITE_NEWS_URL,
-      type: "cta_external_link",
-      hasIcon: false,
-    });
-
-    client.setTitle("What's New?");
-    client.focus()
-  });
 
   function handleAllItemsSeen() {
     setShownItems(prev => prev + ITEMS_PER_PAGE)
@@ -133,7 +127,9 @@ export default function ReleaseAndNewsFeedView() {
           const currentVersion = getSemanticVersion(context.data.env.release ?? "0.0.0")
           const highestInstalledVersion = getNormalisedVersionNumber(storedVersion[0]?.data ?? "0.0.0")
 
-          if (semver.gt(getNormalisedVersionNumber(currentVersion), highestInstalledVersion)) {
+          // Only update the upgrade flag in the modal to prevent race condition where
+          // the global target updates this first and the callout isn't shown to the user.
+          if (semver.gt(getNormalisedVersionNumber(currentVersion), highestInstalledVersion) && target === "modal") {
             // Try to find a release note matching this version.
             const versionRegex = new RegExp(`\\b${currentVersion.replace(/\./g, '\\.')}\\b`)
             const upgradeReleaseNote = articles.find((article) => {
@@ -150,25 +146,26 @@ export default function ReleaseAndNewsFeedView() {
               hasUpgradeReleaseNote = true
               setLatestUpgradeReleaseNote(upgradeReleaseNote)
             }
-
+            
             await client.setUserState("highestInstalledReleaseVersion", currentVersion)
           }
 
           // Set focus flag for the latest release note available
           let hasNewerReleaseNotes = false
-          if (context.data.currentAgent.isAdmin && latestReleaseNoteAvailable) {
+          if (context.data.currentAgent.isAdmin && latestReleaseNoteAvailable && target === "modal") {
             const lastReleaseNoteTitleShown = await client.getUserState<string>("lastReleaseNoteTitleShown")
 
+            // Show the modal once per version
             if (lastReleaseNoteTitleShown[0]?.data !== latestReleaseNoteAvailable.title) {
               await client.setUserState("lastReleaseNoteTitleShown", latestReleaseNoteAvailable.title)
               hasNewerReleaseNotes = true
             }
           }
 
-          // Focus the app if:
+          // Focus the app if the target is "modal" and:
           // - The user is an admin and there is a new release version/note available that hasn't been shown to the user already.
           // - The user has upgraded their instance version and there is a new
-          if (hasNewerReleaseNotes || hasUpgradeReleaseNote) {
+          if ((hasNewerReleaseNotes || hasUpgradeReleaseNote) && target === "modal") {
             setSelectedTab("two")
             client.focus()
           }
