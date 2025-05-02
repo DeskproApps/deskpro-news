@@ -34,6 +34,7 @@ export default function ReleaseAndNewsFeedView() {
     });
 
     client.setTitle("What's New?");
+    client.focus()
   });
 
   function handleAllItemsSeen() {
