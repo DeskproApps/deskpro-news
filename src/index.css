@@ -9,13 +9,3 @@ html, body, #root {
     padding: 8px;
     box-sizing: border-box;
 }
-
-.problem-message {
-    padding: 6px 10px 7px;
-    border-radius: 4px;
-    line-height: 21px;
-}
-
-.problem-message a {
-    text-decoration: none;
-}

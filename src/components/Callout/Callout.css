@@ -1,47 +1,47 @@
-.announcement-banner {
+.callout-banner {
     display: flex;
     justify-content: space-between;
-    background-color: var(--cyan-10);
+    background-color: var(--accent-10);
     padding: 12px;
-    border: 1px solid var(--cyan-80);
+    border: 1px solid var(--accent-80);
     border-radius: 4px;
 }
 
-.announcement-icon {
+.callout-icon {
     font-size: 14px;
-    color: var(--cyan-100)
+    color: var(--accent-100)
 }
 
-.announcement-left {
+.callout-left {
     display: flex;
     font-size: 14px;
     gap: 12px;
 }
 
-.announcement-text {
+.callout-text {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.announcement-text h2,
-.announcement-text p {
+.callout-text h2,
+.callout-text p {
     font-size: 14px;
     margin: 0;
     padding: 0;
 }
 
-.announcement-text p {
+.callout-text p {
     font-weight: 500;
 }
 
 
-.announcement-text p a {
-    color: var(--cyan-100);
+.callout-text p a {
+    color: var(--accent-100);
     text-decoration: underline;
 }
 
-.announcement-close-button{
+.callout-close-button{
     background-color: transparent;
     border: none;
     color: var(--grey-60);
@@ -49,6 +49,6 @@
     transition: 0.25s ease-in-out;
 }
 
-.announcement-close-button:hover {
+.callout-close-button:hover {
     color: var(--red-60);
 }

@@ -1,13 +1,12 @@
 import { buildParentFeedPayload, getSemanticVersion, filterAndCheckNewReleases, getNormalisedVersionNumber, parseContent } from "@/utils";
-import { Context, HorizontalDivider, LoadingSpinner, useDeskproAppClient, useDeskproAppEvents, useDeskproAppTheme } from "@deskpro/app-sdk";
+import { Context, HorizontalDivider, LoadingSpinner, useDeskproAppClient, useDeskproAppEvents } from "@deskpro/app-sdk";
 import { ContextData, NewsArticle } from "@/types";
 import { faBullhorn } from "@fortawesome/free-solid-svg-icons";
 import { fetchAdminFeed, fetchAgentFeed, fetchReleaseFeed } from "@/api";
 import { FilteredReleasesResponse } from "@/utils/filterAndCheckNewReleases/filterAndCheckNewReleases";
 import { Fragment, useState } from "react";
 import { NewsFeedCard } from "@/components/NewsFeedCard/NewsFeedCard";
-import { WEBSITE_NEWS_URL } from "@/constants";
-import AnnouncementBanner from "@/components/AnnouncementBanner";
+import Callout from "@/components/Callout";
 import he from "he";
 import semver from "semver";
 import TwoColumnNavigation from "@/components/TwoColumnNavigation";
@@ -19,16 +18,15 @@ interface ReleaseAndNewsFeedViewProps {
 export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFeedViewProps>) {
   const { target } = props
 
-  const { client } = useDeskproAppClient()
-  const { theme } = useDeskproAppTheme()
-
-  const [selectedTab, setSelectedTab] = useState<"one" | "two">("one")
-  const [isLoading, setIsLoading] = useState(true);
-  const [shownItems, setShownItems] = useState<number>(5);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isShown, setIsShown] = useState(false)
+    const [latestReleaseNote, setLatestReleaseNote] = useState<FilteredReleasesResponse["latestRelease"]>(undefined)
+const [latestUpgradeReleaseNote, setLatestUpgradeReleaseNote] = useState<NewsArticle | null>(null)
   const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([])
-  const [isShown, setIsShown] = useState(false)
-  const [latestUpgradeReleaseNote, setLatestUpgradeReleaseNote] = useState<NewsArticle | null>(null)
-  const [latestReleaseNote, setLatestReleaseNote] = useState<FilteredReleasesResponse["latestRelease"]>(undefined)
+  const [selectedTab, setSelectedTab] = useState<"one" | "two">("one")
+  const [shownItems, setShownItems] = useState<number>(5);
+
+  const { client } = useDeskproAppClient()
   const ITEMS_PER_PAGE = 5
 
   function handleAllItemsSeen() {
@@ -188,27 +186,6 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
     return <LoadingSpinner />;
   }
 
-  if (!newsArticles.length) {
-    return (
-      <div
-        className="problem-message"
-        style={{
-          color: theme.colors.brandShade80,
-          backgroundColor: theme.colors.brandShade10,
-        }}
-      >
-        There was a problem fetching our news feed, would you like to{" "}
-        <a
-          href={WEBSITE_NEWS_URL}
-          target="_blank"
-          style={{ color: theme.colors.cyan100 }}
-        >
-          view the news on our website instead?
-        </a>
-      </div>
-    );
-  }
-
   const renderedArticles = newsArticles.filter(newsArticle => {
     if (selectedTab === "one") {
       return newsArticle.type !== "release"
@@ -221,20 +198,37 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
     <div style={{ padding: "12px", display: "flex", flexDirection: "column", gap: 20 }}>
 
       {/* Show a banner if the user has recently been upgraded and there's a new release note for their current version */}
-      {latestUpgradeReleaseNote && (<AnnouncementBanner icon={faBullhorn} title={` You've been upgraded to ${latestUpgradeReleaseNote.title}`}>
+      {latestUpgradeReleaseNote && (
+        <Callout
+          accent="cyan"
+icon={faBullhorn}
+title={` You've been upgraded to ${latestUpgradeReleaseNote.title}`}
+          showCloseIcon>
         Explore what’s new below, or for more detail see the <a href={latestUpgradeReleaseNote.link} target="_blank">Release Notes</a>.
-      </AnnouncementBanner>)}
+      </Callout>)}
 
       {/* Show a banner if a new release note is available */}
-      {latestReleaseNote && (<AnnouncementBanner icon={faBullhorn} title={`${latestReleaseNote.title} is available`}>
+      {latestReleaseNote && (
+        <Callout
+          accent="cyan"
+icon={faBullhorn}
+          headingText={`${latestReleaseNote.title} is available`}
+          showCloseIcon>
         Explore what’s new in the latest version of Deskpro, or for more detail see the <a href={latestReleaseNote.url} target="_blank">Release Notes</a>.
-      </AnnouncementBanner>)}
-
-
+      </Callout>)}
 
       <TwoColumnNavigation selected={selectedTab} onOneNavigate={() => { setSelectedTab("one") }} onTwoNavigate={() => { setSelectedTab("two") }} />
 
-      {!renderedArticles.length && <div style={{ textAlign: "center" }}>No article available</div>}
+{/* Show a banner if no articles are available for the tab being viewed */}
+      {!renderedArticles.length && (
+        <Callout
+          accent="grey"
+          headingText={selectedTab === "one" ? "No news article available" : "No release note found for your installed version"}
+          style={{ textAlign: "center", justifyContent: "center" }}
+          >
+          Visit <a href={"https://support.deskpro.com/en-US/news"} target="_blank">our support site</a> for more articles.
+        </Callout>
+      )}
 
       {renderedArticles.slice(0, shownItems).map((newsArticle, idx) => {
         const isLastItem = idx === shownItems - 1
