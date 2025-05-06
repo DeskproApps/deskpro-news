@@ -6,6 +6,7 @@ import { DeskproAppProvider, LoadingSpinner } from "@deskpro/app-sdk";
 import { ErrorBoundary } from "react-error-boundary";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import { Suspense } from "react";
+import ErrorFallback from "./components/ErrorFallback";
 import GlobalTargetPage from "./pages/global";
 import ModalAppPage from "./pages/modal";
 
@@ -14,7 +15,7 @@ function App() {
     <DeskproAppProvider>
       <HashRouter>
         <Suspense fallback={<LoadingSpinner />}>
-          <ErrorBoundary fallback={<>An unexpected error occurred</>}>
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
             <Routes>
               <Route path='/global' element={<GlobalTargetPage />} />
               <Route path='/modal' element={<ModalAppPage />} />
