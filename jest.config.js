@@ -3,21 +3,21 @@
  * https://jestjs.io/docs/en/configuration.html
  */
 const esModules = [
-  "d3-array", 
-  "d3-hierarchy", 
-  "internmap", 
-  "d3-scale", 
-  "pretty-bytes", 
-  "semver",
-  "@deskpro/deskpro-ui",
-  "@deskpro/app-sdk"
+    "d3-array",
+    "d3-hierarchy",
+    "internmap",
+    "d3-scale",
+    "pretty-bytes",
+    "semver",
+    "@deskpro/deskpro-ui",
+    "@deskpro/app-sdk"
 ].join("|")
 
 module.exports = {
     clearMocks: true,
     setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
     testEnvironment: "jsdom",
-    transformIgnorePatterns: [`/node_modules/.pnpm/(?!${esModules})`],
+    transformIgnorePatterns: [`/node_modules/(?!${esModules}|.pnpm/${esModules})`],
     modulePathIgnorePatterns: ["/node_modules/", ".dist"],
     maxWorkers: "75%",
     transform: {
