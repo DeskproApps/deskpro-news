@@ -74,26 +74,6 @@ export function NewsFeedCard(props: Readonly<NewsFeedCardProps>) {
                 <img src={coverSrc} loading="lazy" />
             </div>)}
 
-
-
-
-            {/* <div className="news-feed-card-date"><P4>{monthDay}</P4> <P4>{year}</P4></div>
-            <div className="news-feed-card-cover">
-                <img src={coverSrc} loading="lazy" />
-            </div>
-
-            <div className="news-feed-card-body">
-                <H0>{newsMeta.title}</H0>
-
-                <div
-                    className="news-feed-card-body-content"
-                    tabIndex={-1}
-                    dangerouslySetInnerHTML={{
-                        __html: removeContentImages(newsMeta.description ?? ""),
-                    }}
-                />
-            </div> */}
-
         </a>
     )
 }
