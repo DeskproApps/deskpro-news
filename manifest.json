@@ -20,7 +20,7 @@
     {
       "target": "modal",
       "entrypoint": "#/modal",
-      "options": { "width": 500, "height": 1000 }
+      "options": { "width": 530, "height": 1000 }
     }
   ],
   "settings": {},
