@@ -24,7 +24,7 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
   const [latestReleaseNote, setLatestReleaseNote] = useState<FilteredReleasesResponse["latestRelease"]>(undefined)
   const [latestUpgradeReleaseNote, setLatestUpgradeReleaseNote] = useState<NewsArticle | null>(null)
   const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([])
-  const [selectedTab, setSelectedTab] = useState<"one" | "two">("one")
+  const [selectedTab, setSelectedTab] = useState<"news-tab" | "release-notes-tab">("news-tab")
   const [shownItems, setShownItems] = useState<number>(5);
 
   const { client } = useDeskproAppClient()
@@ -168,7 +168,7 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
           // - The user is an admin and there is a new release version/note available that hasn't been shown to the user already.
           // - The user has upgraded their instance version and there is a new
           if (!context.data.env.isDemo && (hasNewerReleaseNotes || hasUpgradeReleaseNote) && target === "modal") {
-            setSelectedTab("two")
+            setSelectedTab("release-notes-tab")
             client.focus()
           }
         })()
@@ -191,7 +191,7 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
   }
 
   const renderedArticles = newsArticles.filter(newsArticle => {
-    if (selectedTab === "one") {
+    if (selectedTab === "news-tab") {
       return newsArticle.type !== "release"
     } else {
       return newsArticle.type === "release"
@@ -221,13 +221,13 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
           Explore what’s new in the latest version of Deskpro, or for more detail see the <a href={latestReleaseNote.url} target="_blank">Release Notes</a>.
         </Callout>)}
 
-      <TwoColumnNavigation selected={selectedTab} onOneNavigate={() => { setSelectedTab("one") }} onTwoNavigate={() => { setSelectedTab("two") }} />
+      <TwoColumnNavigation selected={selectedTab === "news-tab" ? "one" : "two"} onOneNavigate={() => { setSelectedTab("news-tab") }} onTwoNavigate={() => { setSelectedTab("release-notes-tab") }} />
 
       {/* Show a banner if no articles are available for the tab being viewed */}
       {!renderedArticles.length && (
         <Callout
           accent="grey"
-          headingText={selectedTab === "one" ? "No news article available" : "No release note found for your installed version"}
+          headingText={selectedTab === "news-tab"? "No news article available" : "No release note found for your installed version"}
           style={{ textAlign: "center", justifyContent: "center" }}
           >
           Visit <a href={"https://support.deskpro.com/en-US/news"} target="_blank">our support site</a> for more articles.
