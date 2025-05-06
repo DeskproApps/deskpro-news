@@ -98,15 +98,15 @@ describe("NewsFeedCard", () => {
         expect(img).toHaveAttribute("src", "https://example.com/image.jpg")
     })
 
-    it("should render a fallback image if none is found", () => {
+    it("shouldn't = render an image if none is found", () => {
         renderNewsFeedCard({
             newsMeta: {
                 enclosures: [],
             },
         })
 
-        const img = screen.getByRole("img")
-        expect(img).toHaveAttribute("src", "/news-app-cover.png")
+        const img = screen.queryByRole("img")
+        expect(img).not.toBeInTheDocument()
     })
 
     it("should render the description content correctly after removing images", () => {

@@ -17,7 +17,7 @@ export function NewsFeedCard(props: Readonly<NewsFeedCardProps>) {
     const cardRef = useRef<HTMLAnchorElement>(null)
 
     const publishedDate = new Date(newsMeta.published)
-    const coverSrc = newsMeta.enclosures?.[0]?.url ?? "/news-app-cover.png"
+    const coverSrc = newsMeta.enclosures?.[0]?.url
 
     // Effect to detect when the last item becomes visible
     useEffect(() => {
@@ -70,9 +70,10 @@ export function NewsFeedCard(props: Readonly<NewsFeedCardProps>) {
                     __html: removeContentImages(newsMeta.description ?? ""),
                 }} ></div>
 
-            <div className="news-cover-image">
+            {coverSrc && (<div className="news-cover-image">
                 <img src={coverSrc} loading="lazy" />
-            </div>
+            </div>)}
+
 
 
 
