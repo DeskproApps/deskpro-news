@@ -1,4 +1,4 @@
-import { Feed } from "@/types";
+import { NewsFeed } from "@/types";
 import { parse } from "rss-to-json";
 
 const AGENT_NEWS_RSS_URL = "https://support.deskpro.com/en/news/product-agent.rss";
@@ -9,7 +9,7 @@ export const fetchAdminFeed = async () => fetchFeed(ADMIN_NEWS_RSS_URL, "product
 export const fetchAgentFeed = async () => fetchFeed(AGENT_NEWS_RSS_URL, "product-agent");
 export const fetchReleaseFeed = async () => fetchFeed(RELEASE_NOTES_RSS_URL, "release");
 
-const fetchFeed = async (url: string, type: Feed["type"]): Promise<Feed | null> => {
+const fetchFeed = async (url: string, type: NewsFeed["type"]): Promise<NewsFeed | null> => {
     try {
         const feed = await parse(url);
 

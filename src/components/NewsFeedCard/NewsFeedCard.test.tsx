@@ -1,4 +1,4 @@
-import { FeedItem } from "@/types"
+import { NewsArticle } from "@/types"
 import { lightTheme, ThemeProvider } from "@deskpro/deskpro-ui"
 import { NewsFeedCard } from "./NewsFeedCard"
 import { render, screen, waitFor } from "@testing-library/react"
@@ -34,7 +34,7 @@ beforeEach(() => {
 })
 
 interface RenderNewsFeedCardProps {
-    newsMeta?: Partial<FeedItem>
+    newsMeta?: Partial<NewsArticle>
     isLastItem?: boolean
     onAllItemsSeen?: () => void
 }

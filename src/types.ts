@@ -1,10 +1,10 @@
-export type Feed = {
+export type NewsFeed = {
     title: string;
     description: string;
     link: string;
     image: string;
     category: string[];
-    items: FeedItem[];
+    items: NewsArticle[];
     type: "product-agent" | "product-admin" | "release";
 };
 
@@ -14,21 +14,21 @@ type Enclosure ={
     type?: string
 }
 
-export type FeedItem = {
+export type NewsArticle = {
     title: string;
     description?: string;
     link: string;
     published: number;
     created: number;
     enclosures?: Enclosure[]
-    type: Feed["type"]
+    type: NewsFeed["type"]
 };
 
 export type ParentFeedPayload = {
     eventId: "deskpro-apps.message";
     appName: string;
     appEventId: "newsData";
-    news: FeedItem[];
+    news: NewsArticle[];
 };
 
 

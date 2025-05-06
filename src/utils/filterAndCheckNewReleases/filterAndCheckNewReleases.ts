@@ -1,8 +1,8 @@
-import { FeedItem } from "@/types";
+import { NewsArticle } from "@/types";
 import semver from 'semver';
 
 export interface FilteredReleasesResponse {
-    filteredNewsArticles: FeedItem[]
+    filteredNewsArticles: NewsArticle[]
     /**
     * Information about the latest available release (if newer than current version).
     */
@@ -17,9 +17,9 @@ export interface FilteredReleasesResponse {
  * Filters news articles to find relevant release notes based on the user's installed version and checks for newer versions.
  * 
  * @param {string} currentVersion - The current Deskpro version e.g. "2025.9.97"
- * @param {FeedItem[]} newsArticles - Array of news articles
+ * @param {NewsArticle[]} newsArticles - Array of news articles
  */
-export default function filterAndCheckNewReleases(currentVersion: string, newsArticles: FeedItem[]): FilteredReleasesResponse {
+export default function filterAndCheckNewReleases(currentVersion: string, newsArticles: NewsArticle[]): FilteredReleasesResponse {
     const oneYearAgo = new Date()
     oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
 

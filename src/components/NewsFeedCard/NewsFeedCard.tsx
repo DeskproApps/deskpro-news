@@ -1,11 +1,11 @@
 import "./NewsFeedCard.css";
-import { FeedItem } from "@/types";
+import { NewsArticle } from "@/types";
 import { removeContentImages } from "@/utils";
 import { useDeskproAppTheme } from "@deskpro/app-sdk";
 import { useEffect, useRef } from "react";
 
 interface NewsFeedCardProps {
-    newsMeta: FeedItem;
+    newsMeta: NewsArticle;
     isLastItem: boolean;
     onAllItemsSeen: () => void
 }

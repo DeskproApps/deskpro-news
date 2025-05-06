@@ -1,16 +1,16 @@
 import { buildParentFeedPayload, getSemanticVersion, filterAndCheckNewReleases, getNormalisedVersionNumber, parseContent } from "@/utils";
 import { Context, HorizontalDivider, LoadingSpinner, useDeskproAppClient, useDeskproAppEvents, useDeskproAppTheme } from "@deskpro/app-sdk";
-import { ContextData, FeedItem } from "@/types";
+import { ContextData, NewsArticle } from "@/types";
 import { faBullhorn } from "@fortawesome/free-solid-svg-icons";
 import { fetchAdminFeed, fetchAgentFeed, fetchReleaseFeed } from "@/api";
 import { FilteredReleasesResponse } from "@/utils/filterAndCheckNewReleases/filterAndCheckNewReleases";
 import { Fragment, useState } from "react";
 import { NewsFeedCard } from "@/components/NewsFeedCard/NewsFeedCard";
+import { WEBSITE_NEWS_URL } from "@/constants";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
 import he from "he";
 import semver from "semver";
 import TwoColumnNavigation from "@/components/TwoColumnNavigation";
-import { WEBSITE_NEWS_URL } from "@/constants";
 
 interface ReleaseAndNewsFeedViewProps {
   target: "modal" | "global"
@@ -25,9 +25,9 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
   const [selectedTab, setSelectedTab] = useState<"one" | "two">("one")
   const [isLoading, setIsLoading] = useState(true);
   const [shownItems, setShownItems] = useState<number>(5);
-  const [newsArticles, setNewsArticles] = useState<FeedItem[]>([])
+  const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([])
   const [isShown, setIsShown] = useState(false)
-  const [latestUpgradeReleaseNote, setLatestUpgradeReleaseNote] = useState<FeedItem | null>(null)
+  const [latestUpgradeReleaseNote, setLatestUpgradeReleaseNote] = useState<NewsArticle | null>(null)
   const [latestReleaseNote, setLatestReleaseNote] = useState<FilteredReleasesResponse["latestRelease"]>(undefined)
   const ITEMS_PER_PAGE = 5
 
@@ -45,25 +45,25 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
       return;
     }
 
-    // Fetch all feeds in parallel & combine them
-    const feeds = [fetchAgentFeed(), fetchReleaseFeed()]
+    // Fetch all news feeds in parallel & combine them
+    const newsFeeds = [fetchAgentFeed(), fetchReleaseFeed()]
 
     if (context.data.currentAgent.isAdmin) {
-      feeds.push(fetchAdminFeed());
+      newsFeeds.push(fetchAdminFeed());
     }
 
-    let feedArticles = (await Promise.all(feeds)).reduce<FeedItem[]>(
-      (combined, feed) => {
-        if (feed === null) {
+    let feedArticles = (await Promise.all(newsFeeds)).reduce<NewsArticle[]>(
+      (combined, newsFeed) => {
+        if (newsFeed === null) {
           return combined;
         }
 
-        (feed.items).forEach((item) =>
+        (newsFeed.items).forEach((article) =>
           combined.push({
-            ...item,
-            title: he.decode(item.title),
-            description: parseContent(he.decode(item.description ?? "")),
-            type: feed.type,
+            ...article,
+            title: he.decode(article.title),
+            description: parseContent(he.decode(article.description ?? "")),
+            type: newsFeed.type,
           })
         );
 

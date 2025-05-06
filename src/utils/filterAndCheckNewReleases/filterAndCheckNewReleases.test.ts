@@ -1,4 +1,4 @@
-import { FeedItem } from "@/types"
+import { NewsArticle } from "@/types"
 import filterAndCheckNewReleases from "./filterAndCheckNewReleases"
 
 describe('filterAndCheckNewReleases', () => {
@@ -16,7 +16,7 @@ describe('filterAndCheckNewReleases', () => {
 
     describe('Release Note Title Handling', () => {
         it('should handle "Deskpro Release" titles', () => {
-            const newsArticles: FeedItem[] = [
+            const newsArticles: NewsArticle[] = [
                 {
                     type: 'release',
                     created: 123456789,
@@ -32,7 +32,7 @@ describe('filterAndCheckNewReleases', () => {
         })
 
         it('should handle "Deskpro Horizon Release" titles', () => {
-            const newsArticles: FeedItem[] = [
+            const newsArticles: NewsArticle[] = [
                 {
                     type: 'release',
                     created: 123456789,
@@ -50,7 +50,7 @@ describe('filterAndCheckNewReleases', () => {
         })
 
         it('should filter out poorly formatted titles', () => {
-            const newsArticles: FeedItem[] = [
+            const newsArticles: NewsArticle[] = [
                 {
                     type: 'release',
                     created: 123456789,
@@ -75,7 +75,7 @@ describe('filterAndCheckNewReleases', () => {
 
     describe('Version Comparison', () => {
         it('should return the latest version regardless of publish date order', () => {
-            const newsArticles: FeedItem[] = [
+            const newsArticles: NewsArticle[] = [
                 {
                     type: 'release',
                     created: 123456789,
@@ -105,7 +105,7 @@ describe('filterAndCheckNewReleases', () => {
         })
 
         it('should normalize versions correctly (adding .0 if missing)', () => {
-            const newsArticles: FeedItem[] = [
+            const newsArticles: NewsArticle[] = [
                 {
                     type: 'release',
                     created: 123456789,
@@ -126,7 +126,7 @@ describe('filterAndCheckNewReleases', () => {
             const justOverOneYearAgo = new Date(oneYearAgo)
             justOverOneYearAgo.setDate(oneYearAgo.getDate() - 1)
 
-            const newsArticles: FeedItem[] = [
+            const newsArticles: NewsArticle[] = [
                 {
                     type: 'release',
                     created: 123456789,
@@ -160,7 +160,7 @@ describe('filterAndCheckNewReleases', () => {
 
     describe('Mixed Article Types', () => {
         it('should handle mixed release and non-release articles', () => {
-            const newsArticles: FeedItem[] = [
+            const newsArticles: NewsArticle[] = [
                 {
                     type: 'product-agent',
                     created: 123456789,
@@ -200,7 +200,7 @@ describe('filterAndCheckNewReleases', () => {
         })
 
         it('should return empty when no newer versions exist', () => {
-            const newsArticles: FeedItem[] = [
+            const newsArticles: NewsArticle[] = [
                 {
                     type: 'release',
                     title: 'Deskpro Release 2025.1.0',
@@ -216,7 +216,7 @@ describe('filterAndCheckNewReleases', () => {
         })
 
         it('should handle exact version matches', () => {
-            const newsArticles: FeedItem[] = [
+            const newsArticles: NewsArticle[] = [
                 {
                     type: 'release',
                     title: 'Deskpro Release 2025.1.0',
