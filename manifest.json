@@ -30,6 +30,11 @@
         "url": "https://support.deskpro.com/.*",
         "methods": ["GET"],
         "timeout": 10
+      },
+      {
+        "url": "https://get.deskpro.com/.*",
+        "methods": ["GET"],
+        "timeout": 10
       }
     ]
   }

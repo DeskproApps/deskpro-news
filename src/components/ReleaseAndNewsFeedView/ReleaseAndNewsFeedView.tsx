@@ -7,6 +7,7 @@ import { FilteredReleasesResponse } from "@/utils/filterAndCheckNewReleases/filt
 import { Fragment, useState } from "react";
 import { NewsFeedCard } from "@/components/NewsFeedCard/NewsFeedCard";
 import Callout from "@/components/Callout";
+import getOnPremReleases from "@/api/getOnPremReleases";
 import he from "he";
 import semver from "semver";
 import TwoColumnNavigation from "@/components/TwoColumnNavigation";
@@ -81,10 +82,12 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
       });
     }
 
+    const onPremReleases = await getOnPremReleases(client)
     // Filter releases and get the final articles
     const { filteredNewsArticles, latestRelease: mostRecentRelease } = filterAndCheckNewReleases(
       getNormalisedVersionNumber(getSemanticVersion(context.data.env.release ?? "0.0.0")),
-      feedArticles
+      feedArticles,
+      onPremReleases
     )
 
     // Sort by date (newest first)
