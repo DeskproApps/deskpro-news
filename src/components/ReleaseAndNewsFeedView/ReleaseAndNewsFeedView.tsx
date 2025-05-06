@@ -18,10 +18,10 @@ interface ReleaseAndNewsFeedViewProps {
 export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFeedViewProps>) {
   const { target } = props
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [isShown, setIsShown] = useState(false)
-    const [latestReleaseNote, setLatestReleaseNote] = useState<FilteredReleasesResponse["latestRelease"]>(undefined)
-const [latestUpgradeReleaseNote, setLatestUpgradeReleaseNote] = useState<NewsArticle | null>(null)
+  const [isLoading, setIsLoading] = useState(true);
+  const [isShown, setIsShown] = useState(false)
+  const [latestReleaseNote, setLatestReleaseNote] = useState<FilteredReleasesResponse["latestRelease"]>(undefined)
+  const [latestUpgradeReleaseNote, setLatestUpgradeReleaseNote] = useState<NewsArticle | null>(null)
   const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([])
   const [selectedTab, setSelectedTab] = useState<"one" | "two">("one")
   const [shownItems, setShownItems] = useState<number>(5);
@@ -144,7 +144,7 @@ const [latestUpgradeReleaseNote, setLatestUpgradeReleaseNote] = useState<NewsArt
               hasUpgradeReleaseNote = true
               setLatestUpgradeReleaseNote(upgradeReleaseNote)
             }
-            
+
             await client.setUserState("highestInstalledReleaseVersion", currentVersion)
           }
 
@@ -161,9 +161,10 @@ const [latestUpgradeReleaseNote, setLatestUpgradeReleaseNote] = useState<NewsArt
           }
 
           // Focus the app if the target is "modal" and:
+          // - The user's account isn't a demo account
           // - The user is an admin and there is a new release version/note available that hasn't been shown to the user already.
           // - The user has upgraded their instance version and there is a new
-          if ((hasNewerReleaseNotes || hasUpgradeReleaseNote) && target === "modal") {
+          if (!context.data.env.isDemo && (hasNewerReleaseNotes || hasUpgradeReleaseNote) && target === "modal") {
             setSelectedTab("two")
             client.focus()
           }
@@ -201,25 +202,25 @@ const [latestUpgradeReleaseNote, setLatestUpgradeReleaseNote] = useState<NewsArt
       {latestUpgradeReleaseNote && (
         <Callout
           accent="cyan"
-icon={faBullhorn}
-title={` You've been upgraded to ${latestUpgradeReleaseNote.title}`}
+          icon={faBullhorn}
+          title={` You've been upgraded to ${latestUpgradeReleaseNote.title}`}
           showCloseIcon>
-        Explore what’s new below, or for more detail see the <a href={latestUpgradeReleaseNote.link} target="_blank">Release Notes</a>.
-      </Callout>)}
+          Explore what’s new below, or for more detail see the <a href={latestUpgradeReleaseNote.link} target="_blank">Release Notes</a>.
+        </Callout>)}
 
       {/* Show a banner if a new release note is available */}
       {latestReleaseNote && (
         <Callout
           accent="cyan"
-icon={faBullhorn}
+          icon={faBullhorn}
           headingText={`${latestReleaseNote.title} is available`}
           showCloseIcon>
-        Explore what’s new in the latest version of Deskpro, or for more detail see the <a href={latestReleaseNote.url} target="_blank">Release Notes</a>.
-      </Callout>)}
+          Explore what’s new in the latest version of Deskpro, or for more detail see the <a href={latestReleaseNote.url} target="_blank">Release Notes</a>.
+        </Callout>)}
 
       <TwoColumnNavigation selected={selectedTab} onOneNavigate={() => { setSelectedTab("one") }} onTwoNavigate={() => { setSelectedTab("two") }} />
 
-{/* Show a banner if no articles are available for the tab being viewed */}
+      {/* Show a banner if no articles are available for the tab being viewed */}
       {!renderedArticles.length && (
         <Callout
           accent="grey"
