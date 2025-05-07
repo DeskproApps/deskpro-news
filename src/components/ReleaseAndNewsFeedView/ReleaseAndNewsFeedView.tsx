@@ -221,7 +221,7 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
           Explore what’s new in the latest version of Deskpro, or for more detail see the <a href={latestReleaseNote.url} target="_blank">Release Notes</a>.
         </Callout>)}
 
-      <TwoColumnNavigation selected={selectedTab === "news-tab" ? "one" : "two"} onOneNavigate={() => { setSelectedTab("news-tab") }} onTwoNavigate={() => { setSelectedTab("release-notes-tab") }} />
+      <TwoColumnNavigation selectedTab={selectedTab === "news-tab" ? "one" : "two"} onOneNavigate={() => { setSelectedTab("news-tab") }} onTwoNavigate={() => { setSelectedTab("release-notes-tab") }} />
 
       {/* Show a banner if no articles are available for the tab being viewed */}
       {!renderedArticles.length && (

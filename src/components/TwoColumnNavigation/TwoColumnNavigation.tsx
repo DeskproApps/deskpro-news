@@ -1,19 +1,20 @@
-import { TwoButtonGroup, TwoButtonGroupProps } from "@deskpro/app-sdk";
+import TwoButtonGroup from "@/components/TwoButtonGroup";
+import { TwoButtonGroupProps } from "@/components/TwoButtonGroup/TwoButtonGroup";
 
 type Props = {
-  selected: TwoButtonGroupProps["selected"],
+  selectedTab: TwoButtonGroupProps["selectedTab"],
   onOneNavigate: TwoButtonGroupProps["oneOnClick"],
   onTwoNavigate: TwoButtonGroupProps["twoOnClick"],
 }
 
 export default function TwoColumnNavigation(props: Readonly<Props>) {
-  const { selected, onOneNavigate, onTwoNavigate } = props
+  const { selectedTab, onOneNavigate, onTwoNavigate } = props
 
   
 
   return (
     <TwoButtonGroup
-      selected={selected}
+      selectedTab={selectedTab}
       oneLabel="News"
       twoLabel="Release Notes"
       oneOnClick={onOneNavigate}
