@@ -2,7 +2,7 @@
   "name": "@deskpro-apps/deskpro-news",
   "title": "Latest News",
   "description": "Get the latest updates from Deskpro, including new features and other product news",
-  "version": "1.0.41",
+  "version": "1.0.42",
   "scope": "agent",
   "isSingleInstall": false,
   "hasDevMode": true,
@@ -31,11 +31,7 @@
         "methods": ["GET"],
         "timeout": 10
       },
-      {
-        "url": "https://get.deskpro.com/.*",
-        "methods": ["GET"],
-        "timeout": 10
-      }
+      { "url": "https://get.deskpro.com/.*", "methods": ["GET"], "timeout": 10 }
     ]
   }
 }
