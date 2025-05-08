@@ -1,19 +1,29 @@
-import { DeskproAppProvider } from "@deskpro/app-sdk";
-import { Main } from "./pages/Main";
 import "./App.css";
-
-import "flatpickr/dist/themes/light.css";
-import "tippy.js/dist/tippy.css";
-import "simplebar/dist/simplebar.min.css";
-
-import "@deskpro/deskpro-ui/dist/deskpro-ui.css";
 import "@deskpro/deskpro-ui/dist/deskpro-custom-icons.css";
+import "@deskpro/deskpro-ui/dist/deskpro-ui.css";
+import "simplebar/dist/simplebar.min.css";
+import { DeskproAppProvider, LoadingSpinner } from "@deskpro/app-sdk";
+import { ErrorBoundary } from "react-error-boundary";
+import { HashRouter, Route, Routes } from "react-router-dom";
+import { Suspense } from "react";
+import ErrorFallback from "./components/ErrorFallback";
+import GlobalTargetPage from "./pages/global";
+import ModalAppPage from "./pages/modal";
 
 function App() {
   return (
-      <DeskproAppProvider>
-        <Main />
-      </DeskproAppProvider>
+    <DeskproAppProvider>
+      <HashRouter>
+        <Suspense fallback={<LoadingSpinner />}>
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Routes>
+              <Route path='/global' element={<GlobalTargetPage />} />
+              <Route path='/modal' element={<ModalAppPage />} />
+            </Routes>
+          </ErrorBoundary>
+        </Suspense>
+      </HashRouter>
+    </DeskproAppProvider>
   );
 }
 

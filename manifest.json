@@ -14,8 +14,13 @@
   "targets": [
     {
       "target": "global",
-      "entrypoint": "index.html",
-      "options": { "width": 520 }
+      "entrypoint": "#/global",
+      "options": { "width": 530, "height": 1000 }
+    },
+    {
+      "target": "modal",
+      "entrypoint": "#/modal",
+      "options": { "width": 530, "height": 1000 }
     }
   ],
   "settings": {},
@@ -23,6 +28,11 @@
     "whitelist": [
       {
         "url": "https://support.deskpro.com/.*",
+        "methods": ["GET"],
+        "timeout": 10
+      },
+      {
+        "url": "https://get.deskpro.com/.*",
         "methods": ["GET"],
         "timeout": 10
       }
