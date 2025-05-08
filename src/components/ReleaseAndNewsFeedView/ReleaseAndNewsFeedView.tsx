@@ -206,10 +206,11 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
         <Callout
           accent="cyan"
           icon={faBullhorn}
-          title={` You've been upgraded to ${latestUpgradeReleaseNote.title}`}
+          headingText={`You've been upgraded to ${latestUpgradeReleaseNote.title}`}
           showCloseIcon>
           Explore what’s new below, or for more detail see the <a href={latestUpgradeReleaseNote.link} target="_blank">Release Notes</a>.
-        </Callout>)}
+        </Callout>
+      )}
 
       {/* Show a banner if a new release note is available */}
       {latestReleaseNote && (
@@ -219,7 +220,8 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
           headingText={`${latestReleaseNote.title} is available`}
           showCloseIcon>
           Explore what’s new in the latest version of Deskpro, or for more detail see the <a href={latestReleaseNote.url} target="_blank">Release Notes</a>.
-        </Callout>)}
+        </Callout>
+      )}
 
       <TwoColumnNavigation selectedTab={selectedTab === "news-tab" ? "one" : "two"} onOneNavigate={() => { setSelectedTab("news-tab") }} onTwoNavigate={() => { setSelectedTab("release-notes-tab") }} />
 
@@ -227,9 +229,9 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
       {!renderedArticles.length && (
         <Callout
           accent="grey"
-          headingText={selectedTab === "news-tab"? "No news article available" : "No release note found for your installed version"}
+          headingText={selectedTab === "news-tab" ? "No news article available" : "No release note found for your installed version"}
           style={{ textAlign: "center", justifyContent: "center" }}
-          >
+        >
           Visit <a href={"https://support.deskpro.com/en-US/news"} target="_blank">our support site</a> for more articles.
         </Callout>
       )}
