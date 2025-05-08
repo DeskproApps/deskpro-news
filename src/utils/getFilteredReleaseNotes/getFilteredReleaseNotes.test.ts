@@ -1,6 +1,6 @@
 import { NewsArticle } from "@/types"
-import filterAndCheckNewReleases from "./filterAndCheckNewReleases"
 import { OnPremRelease } from "@/api/getOnPremReleases/getOnPremReleases"
+import getFilteredReleaseNotes from "./getFilteredReleaseNotes"
 
 function generateMockOnPremReleases(releaseVersions: string[]): OnPremRelease[] {
 
@@ -12,7 +12,7 @@ function generateMockOnPremReleases(releaseVersions: string[]): OnPremRelease[] 
         }
     })
 }
-describe('filterAndCheckNewReleases', () => {
+describe('getFilteredReleaseNotes', () => {
     const mockCurrentDate = new Date('2025-01-01')
     const oneYearAgo = new Date(mockCurrentDate)
     oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
@@ -38,13 +38,13 @@ describe('filterAndCheckNewReleases', () => {
             ]
 
             const onPremReleases1= generateMockOnPremReleases(["2025.3.0"])
-            const result1 = filterAndCheckNewReleases('2025.0.0', newsArticles, onPremReleases1)
+            const result1 = getFilteredReleaseNotes('2025.0.0', newsArticles, onPremReleases1)
 
             expect(result1.filteredNewsArticles.length).toBe(0)
             expect(result1.latestRelease?.version).toBe('2025.3.0')
 
             const onPremReleases2= generateMockOnPremReleases([])
-            const result2 = filterAndCheckNewReleases('2025.0.0', newsArticles, onPremReleases2)
+            const result2 = getFilteredReleaseNotes('2025.0.0', newsArticles, onPremReleases2)
 
             expect(result2.filteredNewsArticles.length).toBe(0)
             expect(result2.latestRelease?.version).toBe(undefined)
@@ -63,7 +63,7 @@ describe('filterAndCheckNewReleases', () => {
 
             const onPremReleases = generateMockOnPremReleases(['2025.6.0'])
 
-            const result = filterAndCheckNewReleases('2025.1.0', newsArticles, onPremReleases)
+            const result = getFilteredReleaseNotes('2025.1.0', newsArticles, onPremReleases)
             expect(result.filteredNewsArticles.length).toBe(0)
             expect(result.latestRelease?.version).toBe('2025.6.0')
             expect(result.latestRelease?.title).toBe('Deskpro Horizon Release 2025.6.0')
@@ -88,7 +88,7 @@ describe('filterAndCheckNewReleases', () => {
                 }
             ]
 
-            const result = filterAndCheckNewReleases('2025.0.0', newsArticles, [])
+            const result = getFilteredReleaseNotes('2025.0.0', newsArticles, [])
             expect(result.filteredNewsArticles.length).toBe(0)
             expect(result.latestRelease).toBeUndefined()
         })
@@ -122,7 +122,7 @@ describe('filterAndCheckNewReleases', () => {
 
             const onPremReleases = generateMockOnPremReleases(["2025.4.0"])
 
-            const result = filterAndCheckNewReleases('2025.1.0', newsArticles, onPremReleases)
+            const result = getFilteredReleaseNotes('2025.1.0', newsArticles, onPremReleases)
             expect(result.latestRelease?.version).toBe('2025.4.0')
             expect(result.latestRelease?.url).toBe('https://example.com/2025.4.0')
         })
@@ -140,7 +140,7 @@ describe('filterAndCheckNewReleases', () => {
 
             const onPremReleases = generateMockOnPremReleases(["2025.7.0"])
 
-            const result = filterAndCheckNewReleases('2025.0.0', newsArticles, onPremReleases)
+            const result = getFilteredReleaseNotes('2025.0.0', newsArticles, onPremReleases)
             expect(result.filteredNewsArticles.length).toBe(0)
             expect(result.latestRelease?.version).toBe('2025.7.0')
         })
@@ -177,7 +177,7 @@ describe('filterAndCheckNewReleases', () => {
 
             const onPremReleases = generateMockOnPremReleases(["2025.7.0"])
 
-            const result = filterAndCheckNewReleases('2025.5.0', newsArticles, onPremReleases)
+            const result = getFilteredReleaseNotes('2025.5.0', newsArticles, onPremReleases)
             expect(result.filteredNewsArticles.length).toBe(1)
             expect(result.filteredNewsArticles[0].title).toBe('Deskpro Release 2025.4.0')
             expect(result.latestRelease?.version).toBe('2025.7.0')
@@ -213,7 +213,7 @@ describe('filterAndCheckNewReleases', () => {
 
             const onPremReleases = generateMockOnPremReleases(["2025.8.0"])
 
-            const result = filterAndCheckNewReleases('2025.1.0', newsArticles, onPremReleases)
+            const result = getFilteredReleaseNotes('2025.1.0', newsArticles, onPremReleases)
             expect(result.filteredNewsArticles.length).toBe(2)
             expect(result.filteredNewsArticles.some(article => article.type === 'product-admin')).toBe(true)
             expect(result.filteredNewsArticles.some(article => article.type === "product-agent")).toBe(true)
@@ -223,7 +223,7 @@ describe('filterAndCheckNewReleases', () => {
 
     describe('Edge Cases', () => {
         it('should handle empty input', () => {
-            const result = filterAndCheckNewReleases('2025.1.0', [], [])
+            const result = getFilteredReleaseNotes('2025.1.0', [], [])
             expect(result.filteredNewsArticles.length).toBe(0)
             expect(result.latestRelease).toBeUndefined()
         })
@@ -239,7 +239,7 @@ describe('filterAndCheckNewReleases', () => {
                 }
             ]
 
-            const result = filterAndCheckNewReleases('2025.7.0', newsArticles, [])
+            const result = getFilteredReleaseNotes('2025.7.0', newsArticles, [])
             expect(result.filteredNewsArticles.length).toBe(1)
             expect(result.latestRelease).toBeUndefined()
         })
@@ -255,7 +255,7 @@ describe('filterAndCheckNewReleases', () => {
                 }
             ]
 
-            const result = filterAndCheckNewReleases('2025.3.0', newsArticles, [])
+            const result = getFilteredReleaseNotes('2025.3.0', newsArticles, [])
             expect(result.filteredNewsArticles.length).toBe(1)
             expect(result.latestRelease).toBeUndefined()
         })

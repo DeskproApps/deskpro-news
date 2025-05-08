@@ -1,7 +1,7 @@
 import { NewsArticle } from "@/types";
-import semver from 'semver';
-import getNormalisedVersionNumber from "../getNormalisedVersionNumber";
 import { OnPremRelease } from "@/api/getOnPremReleases/getOnPremReleases";
+import getNormalisedVersionNumber from "../getNormalisedVersionNumber";
+import semver from 'semver';
 
 export interface FilteredReleasesResponse {
     filteredNewsArticles: NewsArticle[]
@@ -21,7 +21,7 @@ export interface FilteredReleasesResponse {
  * @param {string} currentVersion - The current Deskpro version e.g. "2025.9.97"
  * @param {NewsArticle[]} newsArticles - Array of news articles
  */
-export default function filterAndCheckNewReleases(currentVersion: string, newsArticles: NewsArticle[], onPremReleases: OnPremRelease[]): FilteredReleasesResponse {
+export default function getFilteredReleaseNotes(currentVersion: string, newsArticles: NewsArticle[], onPremReleases: OnPremRelease[]): FilteredReleasesResponse {
     const oneYearAgo = new Date()
     oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1)
 

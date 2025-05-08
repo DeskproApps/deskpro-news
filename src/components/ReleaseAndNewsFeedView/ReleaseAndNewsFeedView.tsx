@@ -1,9 +1,9 @@
-import { buildParentFeedPayload, getSemanticVersion, filterAndCheckNewReleases, getNormalisedVersionNumber, parseContent } from "@/utils";
+import { buildParentFeedPayload, getSemanticVersion, getFilteredReleaseNotes, getNormalisedVersionNumber, parseContent } from "@/utils";
 import { Context, HorizontalDivider, LoadingSpinner, useDeskproAppClient, useDeskproAppEvents } from "@deskpro/app-sdk";
 import { ContextData, NewsArticle } from "@/types";
 import { faBullhorn } from "@fortawesome/free-solid-svg-icons";
 import { fetchAdminFeed, fetchAgentFeed, fetchReleaseFeed } from "@/api";
-import { FilteredReleasesResponse } from "@/utils/filterAndCheckNewReleases/filterAndCheckNewReleases";
+import { FilteredReleasesResponse } from "@/utils/getFilteredReleaseNotes/getFilteredReleaseNotes";
 import { Fragment, useState } from "react";
 import { NewsFeedCard } from "@/components/NewsFeedCard/NewsFeedCard";
 import Callout from "@/components/Callout";
@@ -84,7 +84,7 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
 
     const onPremReleases = await getOnPremReleases(client)
     // Filter releases and get the final articles
-    const { filteredNewsArticles, latestRelease: mostRecentRelease } = filterAndCheckNewReleases(
+    const { filteredNewsArticles, latestRelease: mostRecentRelease } = getFilteredReleaseNotes(
       getNormalisedVersionNumber(getSemanticVersion(context.data.env.release ?? "0.0.0")),
       feedArticles,
       onPremReleases
