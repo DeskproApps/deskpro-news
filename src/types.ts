@@ -55,7 +55,8 @@ export type ContextData = {
         envId: string;
         release?: string;
         releaseBuildTime: number;
-        isDemo: boolean,
+        isCloud?: boolean;
+        isDemo?: boolean,
         trialDaysLeft?: number
     }
 }

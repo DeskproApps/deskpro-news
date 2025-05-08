@@ -6,6 +6,7 @@ import { fetchAdminFeed, fetchAgentFeed, fetchReleaseFeed } from "@/api";
 import { FilteredReleasesResponse } from "@/utils/getFilteredReleaseNotes/getFilteredReleaseNotes";
 import { Fragment, useState } from "react";
 import { NewsFeedCard } from "@/components/NewsFeedCard/NewsFeedCard";
+import { USER_STATE_NAMES } from "@/constants";
 import Callout from "@/components/Callout";
 import getOnPremReleases from "@/api/getOnPremReleases";
 import he from "he";
@@ -19,9 +20,9 @@ interface ReleaseAndNewsFeedViewProps {
 export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFeedViewProps>) {
   const { target } = props
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true)
   const [isShown, setIsShown] = useState(false)
-  const [latestReleaseNote, setLatestReleaseNote] = useState<FilteredReleasesResponse["latestRelease"]>(undefined)
+  const [latestOnPremReleaseNote, setLatestOnPremReleaseNote] = useState<FilteredReleasesResponse["latestOnPremRelease"]>(undefined)
   const [latestUpgradeReleaseNote, setLatestUpgradeReleaseNote] = useState<NewsArticle | null>(null)
   const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([])
   const [selectedTab, setSelectedTab] = useState<"news-tab" | "release-notes-tab">("news-tab")
@@ -44,7 +45,7 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
       return;
     }
 
-    // Fetch all news feeds in parallel & combine them
+    // Fetch all news feeds in parallel & combine them.
     const newsFeeds = [fetchAgentFeed(), fetchReleaseFeed()]
 
     if (context.data.currentAgent.isAdmin) {
@@ -83,11 +84,16 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
     }
 
     const onPremReleases = await getOnPremReleases(client)
-    // Filter releases and get the final articles
-    const { filteredNewsArticles, latestRelease: mostRecentRelease } = getFilteredReleaseNotes(
-      getNormalisedVersionNumber(getSemanticVersion(context.data.env.release ?? "0.0.0")),
-      feedArticles,
-      onPremReleases
+
+    // Filter the release notes based on the user's environment(cloud/self-hosted) and their installed version.
+    const { filteredNewsArticles, latestOnPremRelease: mostRecentOnPremRelease } = getFilteredReleaseNotes(
+      {
+        currentVersion: getNormalisedVersionNumber(getSemanticVersion(context.data.env.release ?? "0.0.0")),
+        newsArticles: feedArticles,
+        isCloud: context.data.env.isCloud ?? false,
+        onPremReleases,
+        releaseVersionThreshold: "2025.3.0"
+      }
     )
 
     // Sort by date (newest first)
@@ -96,10 +102,9 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
     )
 
     setNewsArticles(sortedNewsArticles)
-    setLatestReleaseNote(mostRecentRelease)
     setIsLoading(false)
 
-    return { articles: sortedNewsArticles, latestReleaseNote: mostRecentRelease }
+    return { articles: sortedNewsArticles, latestReleaseNote: mostRecentOnPremRelease }
   };
 
   useDeskproAppEvents(
@@ -112,7 +117,12 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
             return
           }
 
-          const { articles, latestReleaseNote: latestReleaseNoteAvailable } = res
+          const { articles, latestReleaseNote: mostRecentOnPremRelease } = res
+
+          const isAdmin: boolean = context.data.currentAgent.isAdmin
+          const isOnPremEnvironment: boolean = !context.data.env.isCloud
+          const isDemoAccount: boolean = context.data.env.isDemo ?? false
+          const installedReleaseVersion: string = context.data.env.release ?? "0.0.0"
 
           if (articles.length) {
             const payload = buildParentFeedPayload(
@@ -123,9 +133,9 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
           }
 
           // Check if the user's instance version has upgraded since they last loaded the app.
-          let hasUpgradeReleaseNote = false
-          const storedVersion = await client.getUserState<string>("highestInstalledReleaseVersion")
-          const currentVersion = getSemanticVersion(context.data.env.release ?? "0.0.0")
+          let hasUpgradeReleaseNote: boolean = false
+          const storedVersion = await client.getUserState<string>(USER_STATE_NAMES.HIGHEST_INSTALLED_RELEASE_VERSION)
+          const currentVersion = getSemanticVersion(installedReleaseVersion)
           const highestInstalledVersion = getNormalisedVersionNumber(storedVersion[0]?.data ?? "0.0.0")
 
           // Only update the upgrade flag in the modal to prevent race condition where
@@ -146,28 +156,28 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
             if (upgradeReleaseNote) {
               hasUpgradeReleaseNote = true
               setLatestUpgradeReleaseNote(upgradeReleaseNote)
+              await client.setUserState(USER_STATE_NAMES.HIGHEST_INSTALLED_RELEASE_VERSION, currentVersion)
             }
-
-            await client.setUserState("highestInstalledReleaseVersion", currentVersion)
           }
 
-          // Set focus flag for the latest release note available
-          let hasNewerReleaseNotes = false
-          if (context.data.currentAgent.isAdmin && latestReleaseNoteAvailable && target === "modal") {
-            const lastReleaseNoteTitleShown = await client.getUserState<string>("lastReleaseNoteTitleShown")
+          // Set focus flag for new release notes (Only for OnPrem users).
+          let hasNewerReleaseNotes: boolean = false
+          if (isOnPremEnvironment && isAdmin && mostRecentOnPremRelease && target === "modal") {
+            const lastOnPremReleaseNotePopUpTitleShown = await client.getUserState<string>(USER_STATE_NAMES.LAST_ONPREM_RELEASE_NOTE_POPUP_TITLE_SHOWN)
 
-            // Show the modal once per version
-            if (lastReleaseNoteTitleShown[0]?.data !== latestReleaseNoteAvailable.title) {
-              await client.setUserState("lastReleaseNoteTitleShown", latestReleaseNoteAvailable.title)
+            // Show the modal once per version.
+            if (lastOnPremReleaseNotePopUpTitleShown[0]?.data !== mostRecentOnPremRelease.title) {
               hasNewerReleaseNotes = true
+              setLatestOnPremReleaseNote(mostRecentOnPremRelease)
+              await client.setUserState(USER_STATE_NAMES.LAST_ONPREM_RELEASE_NOTE_POPUP_TITLE_SHOWN, mostRecentOnPremRelease.title)
             }
           }
 
           // Focus the app if the target is "modal" and:
-          // - The user's account isn't a demo account
-          // - The user is an admin and there is a new release version/note available that hasn't been shown to the user already.
-          // - The user has upgraded their instance version and there is a new
-          if (!context.data.env.isDemo && (hasNewerReleaseNotes || hasUpgradeReleaseNote) && target === "modal") {
+          // - The user's account isn't a demo account.
+          // - The user is an admin with an OnPrem environment and there is a new release version/note available that hasn't been shown to them already.
+          // - The user has upgraded their instance version and there is a new.
+          if (!isDemoAccount && (hasNewerReleaseNotes || hasUpgradeReleaseNote) && target === "modal") {
             setSelectedTab("release-notes-tab")
             client.focus()
           }
@@ -201,7 +211,7 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
   return (
     <div style={{ padding: "12px", display: "flex", flexDirection: "column", gap: 20 }}>
 
-      {/* Show a banner if the user has recently been upgraded and there's a new release note for their current version */}
+      {/* Show a banner if the user has recently been upgraded and there's a new release note for their current version. */}
       {latestUpgradeReleaseNote && (
         <Callout
           accent="cyan"
@@ -212,20 +222,20 @@ export default function ReleaseAndNewsFeedView(props: Readonly<ReleaseAndNewsFee
         </Callout>
       )}
 
-      {/* Show a banner if a new release note is available */}
-      {latestReleaseNote && (
+      {/* Show a banner if the user is an OnPrem user and a new release note is available. */}
+      {latestOnPremReleaseNote && (
         <Callout
           accent="cyan"
           icon={faBullhorn}
-          headingText={`${latestReleaseNote.title} is available`}
+          headingText={`${latestOnPremReleaseNote.title} is available`}
           showCloseIcon>
-          Explore what’s new in the latest version of Deskpro, or for more detail see the <a href={latestReleaseNote.url} target="_blank">Release Notes</a>.
+          Explore what’s new in the latest version of Deskpro, or for more detail see the <a href={latestOnPremReleaseNote.url} target="_blank">Release Notes</a>.
         </Callout>
       )}
 
       <TwoColumnNavigation selectedTab={selectedTab === "news-tab" ? "one" : "two"} onOneNavigate={() => { setSelectedTab("news-tab") }} onTwoNavigate={() => { setSelectedTab("release-notes-tab") }} />
 
-      {/* Show a banner if no articles are available for the tab being viewed */}
+      {/* Show a banner if no articles are available for the tab being viewed. */}
       {!renderedArticles.length && (
         <Callout
           accent="grey"
