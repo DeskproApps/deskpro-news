@@ -20,3 +20,5 @@ const ErrorFallback: FallbackRender = (props) => {
       </Callout>
     </Stack>)
 }
+
+export default ErrorFallback;
