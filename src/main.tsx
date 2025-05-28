@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/react';
 import './instrument';
 import "./index.css";
 import { Scrollbar } from "@deskpro/deskpro-ui";
