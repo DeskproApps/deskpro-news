@@ -16,6 +16,8 @@
   "dependencies": {
     "@deskpro/app-sdk": "6.0.3",
     "@deskpro/deskpro-ui": "^8.3.1",
+    "@sentry/react": "^9.22.0",
+    "@sentry/vite-plugin": "^3.5.0",
     "@types/he": "^1.2.3",
     "@types/lodash": "^4.17.16",
     "axios": "1.7.4",
@@ -27,7 +29,6 @@
     "polished": "^4.3.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-error-boundary": "^5.0.0",
     "react-resize-observer": "^1.1.1",
     "react-router-dom": "^7.5.3",
     "rss-to-json": "^2.1.1",
