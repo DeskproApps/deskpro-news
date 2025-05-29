@@ -1,3 +1,4 @@
+import './instrument';
 import "./index.css";
 import { Scrollbar } from "@deskpro/deskpro-ui";
 import App from "./App";
