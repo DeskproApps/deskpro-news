@@ -26,9 +26,6 @@ importers:
       '@types/lodash':
         specifier: ^4.17.20
         version: 4.17.20
-      axios:
-        specifier: 1.7.4
-        version: 1.7.4
       decode-uri-component:
         specifier: 0.2.1
         version: 0.2.1
